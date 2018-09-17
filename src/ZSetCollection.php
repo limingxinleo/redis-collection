@@ -32,6 +32,11 @@ abstract class ZSetCollection
      */
     abstract public function redis();
 
+    /**
+     * Redis数据初始化
+     * @author limx
+     * @param $parentId
+     */
     public function initialize($parentId)
     {
         if (!$this->exist($parentId)) {
@@ -48,13 +53,25 @@ abstract class ZSetCollection
         }
     }
 
+    /**
+     * 当前列表是否存在
+     * @author limx
+     * @param $parentId
+     * @return mixed
+     */
     public function exist($parentId)
     {
         $key = $this->prefix . $parentId;
 
-        return $this->redis()->has($key);
+        return $this->redis()->exists($key);
     }
 
+    /**
+     * 查询所有数据
+     * @author limx
+     * @param $parentId
+     * @return array
+     */
     public function all($parentId)
     {
         $this->initialize($parentId);
@@ -63,6 +80,14 @@ abstract class ZSetCollection
         return $this->redis()->zRevRange($key, 0, -1, true);
     }
 
+    /**
+     * 将元素插入到列表
+     * @author limx
+     * @param $parentId
+     * @param $score
+     * @param $value
+     * @return int
+     */
     public function add($parentId, $score, $value)
     {
         $this->initialize($parentId);
@@ -72,6 +97,13 @@ abstract class ZSetCollection
         return $this->redis()->zAdd($key, $score, $value);
     }
 
+    /**
+     * 将此元素从列表中移除
+     * @author limx
+     * @param $parentId
+     * @param $value
+     * @return int
+     */
     public function rem($parentId, $value)
     {
         $this->initialize($parentId);
