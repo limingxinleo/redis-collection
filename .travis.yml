@@ -29,11 +29,7 @@ before_install:
 install:
   - cd $TRAVIS_BUILD_DIR
   # 更新扩展
-  - wget https://github.com/redis/hiredis/archive/v0.13.3.tar.gz -O hiredis.tar.gz && mkdir -p hiredis && tar -xf hiredis.tar.gz -C hiredis --strip-components=1 && cd hiredis && sudo make -j$(nproc) && sudo make install && sudo ldconfig && cd ..
-  - bash tests/swoole.install.sh
-  - phpenv config-rm xdebug.ini
   - phpenv config-add tests/ci.ini
-  - cp -rf $TRAVIS_BUILD_DIR/tests/.env.example $TRAVIS_BUILD_DIR/tests/.env
   # 安装项目
   - composer self-update
   - cd $TRAVIS_BUILD_DIR
