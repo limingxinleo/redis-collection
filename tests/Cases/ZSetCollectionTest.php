@@ -9,13 +9,15 @@
  */
 namespace SwoftTest\Cases;
 
-use PHPUnit\Framework\TestCase;
+use SwoftTest\Testing\DemoCollection;
 
-/**
- * Class AbstractTestCase
- *
- * @package SwoftTest\Db\Cases
- */
-abstract class AbstractTestCase extends TestCase
+class ZSetCollectionTest extends AbstractTestCase
 {
+    protected $pid = 1;
+
+    public function testAdd()
+    {
+        $collection = new DemoCollection();
+        $collection->add($this->pid, 2, 3);
+    }
 }

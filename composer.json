@@ -4,10 +4,8 @@
     "license": "MIT",
     "keywords": [
         "php",
-        "swoole",
-        "swoft",
-        "db",
-        "model"
+        "redis",
+        "collection"
     ],
     "description": "基于Redis的Collection组件",
     "authors": [
@@ -27,11 +25,9 @@
         }
     },
     "require": {
-        "php": ">=7.0",
-        "swoft/framework": "^1.0.24"
+        "php": ">=7.0"
     },
     "require-dev": {
-        "swoft/swoole-ide-helper": "dev-master",
         "phpunit/phpunit": "^5.7"
     }
 }
