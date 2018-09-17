@@ -49,7 +49,7 @@ class ZSetCollectionTest extends AbstractTestCase
         $collection = new DemoCollection();
         $collection->redis()->del('demo:1');
 
-        list($count, $item) = $collection->pagination($this->pid, ['offset' => 0, 'limit' => 1]);
+        list($count, $item) = $collection->pagination($this->pid, 0, 1);
         $this->assertEquals(2, $count);
         $this->assertEquals([2 => 1], $item);
     }

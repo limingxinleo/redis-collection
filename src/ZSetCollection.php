@@ -117,26 +117,15 @@ abstract class ZSetCollection
      * 分页查询
      * @author limx
      * @param       $parentId
-     * @param array $page
      * @return ['$count',['$id'=>'$score']]
      */
-    public function pagination($parentId, $page = [])
+    public function pagination($parentId, $offset = 0, $limit = 10)
     {
         $this->initialize($parentId);
 
-        $offset = 0;
-        $limit = 10;
         $key = $this->prefix . $parentId;
 
         $count = $this->redis()->zCard($key);
-
-        if (isset($page['offset'])) {
-            $offset = intval($page['offset']);
-        }
-
-        if (isset($page['limit'])) {
-            $limit = intval($page['limit']);
-        }
 
         $end = $offset + $limit - 1;
         $items = $this->redis()->zRevRange($key, $offset, $end, true);
