@@ -24,6 +24,17 @@ class ZSetCollectionTest extends AbstractTestCase
         $this->assertTrue($collection->redis()->zScore('demo:1', 3) == 2);
     }
 
+    public function testScore()
+    {
+        $collection = new DemoCollection();
+        $collection->add($this->pid, 2, 3);
+        $res = $collection->score($this->pid, 3);
+        $this->assertEquals(2, $res);
+
+        $res = $collection->score($this->pid, 100);
+        $this->assertTrue(empty($res));
+    }
+
     public function testRem()
     {
         $collection = new DemoCollection();

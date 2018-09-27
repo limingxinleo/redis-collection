@@ -98,6 +98,21 @@ abstract class ZSetCollection
     }
 
     /**
+     * 获取元素分值
+     * @author limx
+     * @param $parentId
+     * @param $value
+     */
+    public function score($parentId, $value)
+    {
+        $this->initialize($parentId);
+
+        $key = $this->prefix . $parentId;
+
+        return $this->redis()->zScore($key, $value);
+    }
+
+    /**
      * 将此元素从列表中移除
      * @author limx
      * @param $parentId
