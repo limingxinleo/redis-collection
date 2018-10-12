@@ -11,6 +11,7 @@ namespace SwoftTest\Cases;
 
 use SwoftTest\Testing\DemoCollection;
 use SwoftTest\Testing\DemoHashCollection;
+use SwoftTest\Testing\DemoHashCollection2;
 
 class HashCollectionTest extends AbstractTestCase
 {
@@ -68,5 +69,19 @@ class HashCollectionTest extends AbstractTestCase
         $this->assertTrue($collection->redis()->exists('demohash:1') > 0);
         $collection->delete($this->pid);
         $this->assertTrue($collection->redis()->exists('demohash:1') == 0);
+    }
+
+    public function testTtl()
+    {
+        $collection = new DemoHashCollection();
+        $res = $collection->ttl($this->pid);
+
+        $this->assertEquals(-2, $res);
+
+        $collection = new DemoHashCollection2();
+        $collection->get($this->pid);
+        $res = $collection->ttl($this->pid);
+        
+        $this->assertTrue($res > 0);
     }
 }

@@ -13,6 +13,11 @@ abstract class HashCollection
     protected $prefix;
 
     /**
+     * @var integer
+     */
+    protected $ttl = 0;
+
+    /**
      * 从DB中读取对应的全部列表
      * @author limx
      * @param $parentId
@@ -39,6 +44,11 @@ abstract class HashCollection
             $key = $this->prefix . $parentId;
 
             $this->redis()->hMset($key, $hash);
+
+            // 增加超时时间配置
+            if (is_int($this->ttl) && $this->ttl > 0) {
+                $this->redis()->expire($key, $this->ttl);
+            }
         }
     }
 
@@ -115,5 +125,18 @@ abstract class HashCollection
         $key = $this->prefix . $parentId;
 
         return $this->redis()->del($key);
+    }
+
+    /**
+     * 超时时间
+     * @author limx
+     * @param $parentId
+     * @return int
+     */
+    public function ttl($parentId)
+    {
+        $key = $this->prefix . $parentId;
+
+        return $this->redis()->ttl($key);
     }
 }
