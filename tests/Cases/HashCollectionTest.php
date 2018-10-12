@@ -74,9 +74,10 @@ class HashCollectionTest extends AbstractTestCase
     public function testTtl()
     {
         $collection = new DemoHashCollection();
+        $collection->get($this->pid);
         $res = $collection->ttl($this->pid);
 
-        $this->assertEquals(-2, $res);
+        $this->assertEquals(-1, $res);
 
         $collection = new DemoHashCollection2();
         $collection->get($this->pid);
