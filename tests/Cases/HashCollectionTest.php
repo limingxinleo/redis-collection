@@ -81,7 +81,7 @@ class HashCollectionTest extends AbstractTestCase
         $collection = new DemoHashCollection2();
         $collection->get($this->pid);
         $res = $collection->ttl($this->pid);
-        
+
         $this->assertTrue($res > 0);
     }
 }
