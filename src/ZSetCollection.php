@@ -147,4 +147,18 @@ abstract class ZSetCollection
 
         return [$count, $items];
     }
+
+    /**
+     * 返回有序集合总数
+     * @author limx
+     * @param $parentId
+     */
+    public function count($parentId)
+    {
+        $this->initialize($parentId);
+
+        $key = $this->prefix . $parentId;
+
+        return $this->redis()->zCard($key) ?? 0;
+    }
 }

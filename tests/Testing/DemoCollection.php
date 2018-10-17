@@ -18,7 +18,11 @@ class DemoCollection extends ZSetCollection
 
     public function reload($parentId)
     {
-        return [1 => 0, 2 => 1];
+        if ($parentId == 1) {
+            return [1 => 0, 2 => 1];
+        }
+
+        return [];
     }
 
     public function redis()
