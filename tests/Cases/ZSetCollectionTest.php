@@ -49,7 +49,7 @@ class ZSetCollectionTest extends AbstractTestCase
     public function testAll()
     {
         $collection = new DemoCollection();
-        $collection->redis()->del('demo:1');
+        $collection->delete($this->pid);
 
         $res = $collection->all($this->pid);
         $this->assertEquals([1 => 0, 2 => 1], $res);
@@ -58,7 +58,7 @@ class ZSetCollectionTest extends AbstractTestCase
     public function testPagination()
     {
         $collection = new DemoCollection();
-        $collection->redis()->del('demo:1');
+        $collection->delete($this->pid);
 
         list($count, $item) = $collection->pagination($this->pid, 0, 1);
         $this->assertEquals(2, $count);
@@ -68,7 +68,7 @@ class ZSetCollectionTest extends AbstractTestCase
     public function testZSetCount()
     {
         $collection = new DemoCollection();
-        $collection->redis()->del('demo:1');
+        $collection->delete($this->pid);
 
         $count = $collection->count($this->pid);
 

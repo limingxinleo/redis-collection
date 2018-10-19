@@ -17,6 +17,8 @@ abstract class ZSetCollection
      */
     protected $prefix;
 
+    const DEFAULT_ID = 0;
+
     /**
      * 从DB中读取对应的全部列表
      * @author limx
@@ -39,18 +41,18 @@ abstract class ZSetCollection
      */
     public function initialize($parentId)
     {
-        if (!$this->exist($parentId)) {
-            $list = $this->reload($parentId);
-            $params = [];
-            foreach ($list as $id => $score) {
-                $params[] = $score;
-                $params[] = $id;
-            }
-
-            $key = $this->prefix . $parentId;
-
-            $this->redis()->zAdd($key, ...$params);
+        $list = $this->reload($parentId);
+        $params = [0, static::DEFAULT_ID];
+        foreach ($list as $id => $score) {
+            $params[] = $score;
+            $params[] = $id;
         }
+
+        $key = $this->prefix . $parentId;
+
+        $this->redis()->zAdd($key, ...$params);
+
+        return $list;
     }
 
     /**
@@ -67,6 +69,19 @@ abstract class ZSetCollection
     }
 
     /**
+     * 删除缓存
+     * @author limx
+     * @param $parentId
+     * @return bool
+     */
+    public function delete($parentId)
+    {
+        $key = $this->prefix . $parentId;
+
+        return $this->redis()->del($key);
+    }
+
+    /**
      * 查询所有数据
      * @author limx
      * @param $parentId
@@ -74,10 +89,14 @@ abstract class ZSetCollection
      */
     public function all($parentId)
     {
-        $this->initialize($parentId);
-
         $key = $this->prefix . $parentId;
-        return $this->redis()->zRevRange($key, 0, -1, true);
+        $res = $this->redis()->zRevRange($key, 0, -1, true);
+        if (empty($res)) {
+            return $this->initialize($parentId);
+        }
+
+        unset($res[static::DEFAULT_ID]);
+        return $res;
     }
 
     /**
@@ -90,7 +109,9 @@ abstract class ZSetCollection
      */
     public function add($parentId, $score, $value)
     {
-        $this->initialize($parentId);
+        if (!$this->exist($parentId)) {
+            $this->initialize($parentId);
+        }
 
         $key = $this->prefix . $parentId;
 
@@ -105,7 +126,9 @@ abstract class ZSetCollection
      */
     public function score($parentId, $value)
     {
-        $this->initialize($parentId);
+        if (!$this->exist($parentId)) {
+            $this->initialize($parentId);
+        }
 
         $key = $this->prefix . $parentId;
 
@@ -121,8 +144,6 @@ abstract class ZSetCollection
      */
     public function rem($parentId, $value)
     {
-        $this->initialize($parentId);
-
         $key = $this->prefix . $parentId;
 
         return $this->redis()->zRem($key, $value);
@@ -136,11 +157,9 @@ abstract class ZSetCollection
      */
     public function pagination($parentId, $offset = 0, $limit = 10)
     {
-        $this->initialize($parentId);
-
         $key = $this->prefix . $parentId;
 
-        $count = $this->redis()->zCard($key);
+        $count = $this->count($parentId);
 
         $end = $offset + $limit - 1;
         $items = $this->redis()->zRevRange($key, $offset, $end, true);
@@ -155,10 +174,16 @@ abstract class ZSetCollection
      */
     public function count($parentId)
     {
-        $this->initialize($parentId);
-
         $key = $this->prefix . $parentId;
 
-        return $this->redis()->zCard($key) ?? 0;
+        $count = $this->redis()->zCard($key);
+        if ($count == 0) {
+            $list = $this->initialize($parentId);
+            $count = count($list);
+        } else {
+            $count--;
+        }
+
+        return $count;
     }
 }
