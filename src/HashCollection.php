@@ -17,6 +17,9 @@ abstract class HashCollection
      */
     protected $ttl = 0;
 
+    const DEFAULT_KEY = 'swoft:none';
+    const DEFAULT_VALUE = 'none';
+
     /**
      * 从DB中读取对应的全部列表
      * @author limx
@@ -39,17 +42,18 @@ abstract class HashCollection
      */
     public function initialize($parentId)
     {
-        if (!$this->exist($parentId)) {
-            $hash = $this->reload($parentId);
-            $key = $this->prefix . $parentId;
+        $hash = $this->reload($parentId);
+        $hash[static::DEFAULT_KEY] = static::DEFAULT_VALUE;
+        $key = $this->prefix . $parentId;
 
-            $this->redis()->hMset($key, $hash);
+        $this->redis()->hMset($key, $hash);
 
-            // 增加超时时间配置
-            if (is_int($this->ttl) && $this->ttl > 0) {
-                $this->redis()->expire($key, $this->ttl);
-            }
+        // 增加超时时间配置
+        if (is_int($this->ttl) && $this->ttl > 0) {
+            $this->redis()->expire($key, $this->ttl);
         }
+
+        return $hash;
     }
 
     /**
@@ -73,10 +77,14 @@ abstract class HashCollection
      */
     public function get($parentId)
     {
-        $this->initialize($parentId);
-
         $key = $this->prefix . $parentId;
-        return $this->redis()->hGetAll($key);
+        $res = $this->redis()->hGetAll($key);
+        if (empty($res)) {
+            $res = $this->initialize($parentId);
+        }
+
+        unset($res[static::DEFAULT_KEY]);
+        return $res;
     }
 
     /**
@@ -89,7 +97,9 @@ abstract class HashCollection
      */
     public function set($parentId, $hkey, $hvalue)
     {
-        $this->initialize($parentId);
+        if (!$this->exist($parentId)) {
+            $this->initialize($parentId);
+        }
 
         $key = $this->prefix . $parentId;
 
@@ -106,7 +116,9 @@ abstract class HashCollection
      */
     public function mset($parentId, $hashKeys)
     {
-        $this->initialize($parentId);
+        if (!$this->exist($parentId)) {
+            $this->initialize($parentId);
+        }
 
         $key = $this->prefix . $parentId;
 
@@ -135,6 +147,10 @@ abstract class HashCollection
      */
     public function ttl($parentId)
     {
+        if (!$this->exist($parentId)) {
+            $this->initialize($parentId);
+        }
+
         $key = $this->prefix . $parentId;
 
         return $this->redis()->ttl($key);

@@ -28,7 +28,13 @@ class HashCollectionTest extends AbstractTestCase
             'id' => 1,
             'name' => 'limx',
             'age' => 18,
-        ], $collection->redis()->hGetAll('demohash:1'));
+        ], $collection->get($this->pid));
+
+        $this->assertEquals([
+            'id' => 1,
+            'name' => 'limx',
+            'age' => 18,
+        ], $collection->get($this->pid));
     }
 
     public function testMSet()
@@ -43,13 +49,20 @@ class HashCollectionTest extends AbstractTestCase
             'name' => 'limx',
             'age' => 18,
             'sex' => 1,
-        ], $collection->redis()->hGetAll('demohash:1'));
+        ], $collection->get($this->pid));
+
+        $this->assertEquals([
+            'id' => 1,
+            'name' => 'limx',
+            'age' => 18,
+            'sex' => 1,
+        ], $collection->get($this->pid));
     }
 
     public function testGet()
     {
         $collection = new DemoHashCollection();
-        $collection->redis()->del('demohash:1');
+        $collection->delete($this->pid);
         $collection->mset($this->pid, ['age' => 18, 'sex' => 1]);
 
         $this->assertTrue($collection->redis()->exists('demohash:1') > 0);
