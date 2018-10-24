@@ -4,6 +4,8 @@
 namespace Xin\RedisCollection;
 
 
+use Xin\RedisCollection\Exceptions\CollectionException;
+
 abstract class StringCollection
 {
     /**
@@ -27,7 +29,7 @@ abstract class StringCollection
      */
     public function exist($id)
     {
-        $key = $this->prefix . $id;
+        $key = $this->getCacheKey($id);
 
         return $this->redis()->exists($key);
     }
@@ -40,7 +42,7 @@ abstract class StringCollection
      */
     public function get($id)
     {
-        $key = $this->prefix . $id;
+        $key = $this->getCacheKey($id);
 
         return $this->redis()->get($key);
     }
@@ -55,7 +57,7 @@ abstract class StringCollection
      */
     public function set($id, $value, $ttl = 3600)
     {
-        $key = $this->prefix . $id;
+        $key = $this->getCacheKey($id);
 
         return $this->redis()->set($key, $value, $ttl);
     }
@@ -67,8 +69,17 @@ abstract class StringCollection
      */
     public function delete($id)
     {
-        $key = $this->prefix . $id;
+        $key = $this->getCacheKey($id);
 
         return $this->redis()->delete($key);
+    }
+
+    protected function getCacheKey($id)
+    {
+        if (empty($this->prefix)) {
+            throw new CollectionException('The prefix is required!');
+        }
+
+        return $this->prefix . $id;
     }
 }

@@ -44,7 +44,7 @@ abstract class HashCollection
     {
         $hash = $this->reload($parentId);
         $hash[static::DEFAULT_KEY] = static::DEFAULT_VALUE;
-        $key = $this->prefix . $parentId;
+        $key = $this->getCacheKey($parentId);
 
         $this->redis()->hMset($key, $hash);
 
@@ -64,7 +64,7 @@ abstract class HashCollection
      */
     public function exist($parentId)
     {
-        $key = $this->prefix . $parentId;
+        $key = $this->getCacheKey($parentId);
 
         return $this->redis()->exists($key);
     }
@@ -77,7 +77,7 @@ abstract class HashCollection
      */
     public function get($parentId)
     {
-        $key = $this->prefix . $parentId;
+        $key = $this->getCacheKey($parentId);
         $res = $this->redis()->hGetAll($key);
         if (empty($res)) {
             $res = $this->initialize($parentId);
@@ -101,7 +101,7 @@ abstract class HashCollection
             $this->initialize($parentId);
         }
 
-        $key = $this->prefix . $parentId;
+        $key = $this->getCacheKey($parentId);
 
         return $this->redis()->hSet($key, $hkey, $hvalue);
     }
@@ -120,7 +120,7 @@ abstract class HashCollection
             $this->initialize($parentId);
         }
 
-        $key = $this->prefix . $parentId;
+        $key = $this->getCacheKey($parentId);
 
         return $this->redis()->hMset($key, $hashKeys);
     }
@@ -134,7 +134,7 @@ abstract class HashCollection
      */
     public function delete($parentId)
     {
-        $key = $this->prefix . $parentId;
+        $key = $this->getCacheKey($parentId);
 
         return $this->redis()->del($key);
     }
@@ -151,8 +151,17 @@ abstract class HashCollection
             $this->initialize($parentId);
         }
 
-        $key = $this->prefix . $parentId;
+        $key = $this->getCacheKey($parentId);
 
         return $this->redis()->ttl($key);
+    }
+
+    protected function getCacheKey($parentId)
+    {
+        if (empty($this->prefix)) {
+            throw new CollectionException('The prefix is required!');
+        }
+
+        return $this->prefix . $parentId;
     }
 }
