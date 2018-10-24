@@ -9,6 +9,8 @@
  */
 namespace Xin\RedisCollection;
 
+use Xin\RedisCollection\Exceptions\CollectionException;
+
 abstract class ZSetCollection
 {
     /**
@@ -48,7 +50,7 @@ abstract class ZSetCollection
             $params[] = $id;
         }
 
-        $key = $this->prefix . $parentId;
+        $key = $this->getCacheKey($parentId);
 
         $this->redis()->zAdd($key, ...$params);
 
@@ -63,7 +65,7 @@ abstract class ZSetCollection
      */
     public function exist($parentId)
     {
-        $key = $this->prefix . $parentId;
+        $key = $this->getCacheKey($parentId);
 
         return $this->redis()->exists($key);
     }
@@ -76,7 +78,7 @@ abstract class ZSetCollection
      */
     public function delete($parentId)
     {
-        $key = $this->prefix . $parentId;
+        $key = $this->getCacheKey($parentId);
 
         return $this->redis()->del($key);
     }
@@ -89,7 +91,7 @@ abstract class ZSetCollection
      */
     public function all($parentId)
     {
-        $key = $this->prefix . $parentId;
+        $key = $this->getCacheKey($parentId);
         $res = $this->redis()->zRevRange($key, 0, -1, true);
         if (empty($res)) {
             return $this->initialize($parentId);
@@ -113,7 +115,7 @@ abstract class ZSetCollection
             $this->initialize($parentId);
         }
 
-        $key = $this->prefix . $parentId;
+        $key = $this->getCacheKey($parentId);
 
         return $this->redis()->zAdd($key, $score, $value);
     }
@@ -130,7 +132,7 @@ abstract class ZSetCollection
             $this->initialize($parentId);
         }
 
-        $key = $this->prefix . $parentId;
+        $key = $this->getCacheKey($parentId);
 
         return $this->redis()->zScore($key, $value);
     }
@@ -144,7 +146,7 @@ abstract class ZSetCollection
      */
     public function rem($parentId, $value)
     {
-        $key = $this->prefix . $parentId;
+        $key = $this->getCacheKey($parentId);
 
         return $this->redis()->zRem($key, $value);
     }
@@ -157,7 +159,7 @@ abstract class ZSetCollection
      */
     public function pagination($parentId, $offset = 0, $limit = 10)
     {
-        $key = $this->prefix . $parentId;
+        $key = $this->getCacheKey($parentId);
 
         $count = $this->count($parentId);
 
@@ -174,7 +176,7 @@ abstract class ZSetCollection
      */
     public function count($parentId)
     {
-        $key = $this->prefix . $parentId;
+        $key = $this->getCacheKey($parentId);
 
         $count = $this->redis()->zCard($key);
         if ($count == 0) {
@@ -185,5 +187,14 @@ abstract class ZSetCollection
         }
 
         return $count;
+    }
+
+    protected function getCacheKey($parentId)
+    {
+        if (empty($this->prefix)) {
+            throw new CollectionException('The prefix is required!');
+        }
+
+        return $this->prefix . $parentId;
     }
 }
