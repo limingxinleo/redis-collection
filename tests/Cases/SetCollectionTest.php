@@ -71,6 +71,8 @@ class SetCollectionTest extends AbstractTestCase
 
         $collection->rem($this->pid, 1);
         $res = $collection->all($this->pid);
-        $this->assertEquals([2, 'a'], $res);
+        $this->assertTrue(count($res) == 2);
+        $this->assertTrue(in_array(2, $res));
+        $this->assertTrue(in_array('a', $res));
     }
 }
