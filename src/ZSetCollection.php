@@ -194,6 +194,7 @@ abstract class ZSetCollection
         $end = $offset + $limit - 1;
         $items = $this->redis()->zRevRange($key, $offset, $end, true);
 
+        unset($items[static::DEFAULT_ID]);
         return [$count, $items];
     }
 
