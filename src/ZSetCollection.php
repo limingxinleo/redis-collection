@@ -19,6 +19,12 @@ abstract class ZSetCollection
      */
     protected $prefix;
 
+    /**
+     * 是否认为当前ZSET一定存在
+     * @var bool
+     */
+    protected $exist = false;
+
     const DEFAULT_ID = 0;
 
     /**
@@ -65,6 +71,10 @@ abstract class ZSetCollection
      */
     public function exist($parentId)
     {
+        if ($this->exist) {
+            return true;
+        }
+
         $key = $this->getCacheKey($parentId);
 
         return $this->redis()->exists($key);
@@ -118,6 +128,24 @@ abstract class ZSetCollection
         $key = $this->getCacheKey($parentId);
 
         return $this->redis()->zAdd($key, $score, $value);
+    }
+
+    /**
+     * @author limx
+     * @param $parentId
+     * @param $score
+     * @param $value
+     * @return int
+     */
+    public function incr($parentId, $score, $value)
+    {
+        if (!$this->exist($parentId)) {
+            $this->initialize($parentId);
+        }
+
+        $key = $this->getCacheKey($parentId);
+
+        return $this->redis()->zIncrBy($key, $score, $value);
     }
 
     /**
