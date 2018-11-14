@@ -74,6 +74,18 @@ abstract class StringCollection
         return $this->redis()->delete($key);
     }
 
+    /**
+     * 获取字符串剩余时间
+     * @author limx
+     * @param $id
+     */
+    public function ttl($id)
+    {
+        $key = $this->getCacheKey($id);
+
+        return $this->redis()->ttl($key);
+    }
+
     protected function getCacheKey($id)
     {
         if (empty($this->prefix)) {

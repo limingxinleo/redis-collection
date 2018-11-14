@@ -35,6 +35,7 @@ class StringCollectionTest extends AbstractTestCase
 
         $this->assertTrue($collection->redis()->exists('demostring:1') > 0);
         $this->assertEquals('xxxxx', $collection->get($this->pid));
+        $this->assertEquals(18, $collection->ttl($this->pid));
     }
 
     public function testDelete()
