@@ -19,7 +19,7 @@ abstract class SetCollection
      */
     protected $prefix;
 
-    const DEFAULT_ID = 0;
+    const DEFAULT_ID = '0';
 
     /**
      * 从DB中读取对应的全部列表
