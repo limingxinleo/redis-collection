@@ -9,8 +9,6 @@
  */
 namespace SwoftTest\Cases;
 
-use SwoftTest\Testing\DemoCollection;
-use SwoftTest\Testing\DemoHashCollection;
 use SwoftTest\Testing\DemoStringCollection;
 
 class StringCollectionTest extends AbstractTestCase

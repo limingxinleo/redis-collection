@@ -9,7 +9,6 @@
  */
 namespace SwoftTest\Cases;
 
-use SwoftTest\Testing\DemoCollection;
 use SwoftTest\Testing\DemoSetCollection;
 
 class SetCollectionTest extends AbstractTestCase

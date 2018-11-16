@@ -1,8 +1,16 @@
 <?php
-
+/**
+ * This file is part of Swoft.
+ *
+ * @link     https://swoft.org
+ * @document https://doc.swoft.org
+ * @contact  limingxin@swoft.org
+ * @license  https://github.com/swoft-cloud/swoft/blob/master/LICENSE
+ */
 
 namespace Xin\RedisCollection;
 
+use Xin\RedisCollection\Exceptions\CollectionException;
 
 abstract class HashCollection
 {
@@ -18,6 +26,7 @@ abstract class HashCollection
     protected $ttl = 0;
 
     const DEFAULT_KEY = 'swoft:none';
+
     const DEFAULT_VALUE = 'none';
 
     /**

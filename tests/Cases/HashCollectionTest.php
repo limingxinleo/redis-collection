@@ -9,7 +9,6 @@
  */
 namespace SwoftTest\Cases;
 
-use SwoftTest\Testing\DemoCollection;
 use SwoftTest\Testing\DemoHashCollection;
 use SwoftTest\Testing\DemoHashCollection2;
 
