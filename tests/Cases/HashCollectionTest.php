@@ -112,6 +112,12 @@ class HashCollectionTest extends AbstractTestCase
         $array = $collection->get($this->pid);
         $this->assertEquals(['id' => 2, 'name' => 'limx'], $array);
 
+        $res = $collection->incr($this->pid, 'id', -1);
+        $this->assertEquals(1, $res);
+
+        $array = $collection->get($this->pid);
+        $this->assertEquals(['id' => 1, 'name' => 'limx'], $array);
+
         $collection->delete($this->pid);
     }
 }
