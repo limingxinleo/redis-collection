@@ -107,6 +107,24 @@ abstract class HashCollection
     }
 
     /**
+     * 累加、累减
+     * @author limx
+     * @param $parentId
+     * @param $hkey
+     * @param $hvalue
+     */
+    public function incr($parentId, $hkey, $hvalue)
+    {
+        if (!$this->exist($parentId)) {
+            $this->initialize($parentId);
+        }
+
+        $key = $this->getCacheKey($parentId);
+
+        return $this->redis()->hIncrByFloat($key, $hkey, $hvalue);
+    }
+
+    /**
      * 将多个元素插入到列表
      * @author limx
      * @param $parentId
