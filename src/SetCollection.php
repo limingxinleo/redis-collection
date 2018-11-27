@@ -19,6 +19,12 @@ abstract class SetCollection
      */
     protected $prefix;
 
+    /**
+     * 是否认为当前SET一定存在
+     * @var bool
+     */
+    protected $exist = false;
+
     const DEFAULT_ID = '0';
 
     /**
@@ -62,6 +68,10 @@ abstract class SetCollection
      */
     public function exist($parentId)
     {
+        if ($this->exist) {
+            return true;
+        }
+
         $key = $this->getCacheKey($parentId);
 
         return $this->redis()->exists($key);
@@ -95,7 +105,9 @@ abstract class SetCollection
         }
 
         $key = array_search(static::DEFAULT_ID, $res);
-        unset($res[$key]);
+        if ($key !== false) {
+            unset($res[$key]);
+        }
         return array_values($res);
     }
 

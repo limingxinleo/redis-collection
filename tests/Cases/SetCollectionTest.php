@@ -9,6 +9,7 @@
  */
 namespace SwoftTest\Cases;
 
+use SwoftTest\Testing\DemoSet2Collection;
 use SwoftTest\Testing\DemoSetCollection;
 
 class SetCollectionTest extends AbstractTestCase
@@ -73,5 +74,17 @@ class SetCollectionTest extends AbstractTestCase
         $this->assertTrue(count($res) == 2);
         $this->assertTrue(in_array(2, $res));
         $this->assertTrue(in_array('a', $res));
+    }
+
+    public function testExist()
+    {
+        $col = new DemoSet2Collection();
+        $col->add($this->pid, 1);
+
+        $res = $col->all($this->pid);
+        $this->assertEquals([1], $res);
+
+        $res = $col->redis()->sMembers('demoset2:' . $this->pid);
+        $this->assertEquals([1], $res);
     }
 }
