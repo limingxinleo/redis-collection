@@ -58,8 +58,8 @@ abstract class HashCollection
         $this->redis()->hMset($key, $hash);
 
         // 增加超时时间配置
-        if (is_int($this->ttl) && $this->ttl > 0) {
-            $this->redis()->expire($key, $this->ttl);
+        if (is_int($this->getTtl()) && $this->getTtl() > 0) {
+            $this->redis()->expire($key, $this->getTtl());
         }
 
         return $hash;
@@ -190,5 +190,13 @@ abstract class HashCollection
         }
 
         return $this->prefix . $parentId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTtl(): int
+    {
+        return $this->ttl;
     }
 }
