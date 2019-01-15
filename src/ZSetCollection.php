@@ -52,7 +52,7 @@ abstract class ZSetCollection
         $list = $this->reload($parentId);
         $params = [0, static::DEFAULT_ID];
         foreach ($list as $id => $score) {
-            $params[] = $score;
+            $params[] = (float)$score;
             $params[] = $id;
         }
 
