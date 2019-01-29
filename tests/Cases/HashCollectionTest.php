@@ -11,6 +11,7 @@ namespace SwoftTest\Cases;
 
 use SwoftTest\Testing\DemoHashCollection;
 use SwoftTest\Testing\DemoHashCollection2;
+use SwoftTest\Testing\DemoHashCollection3;
 
 class HashCollectionTest extends AbstractTestCase
 {
@@ -96,6 +97,23 @@ class HashCollectionTest extends AbstractTestCase
         $res = $collection->ttl($this->pid);
 
         $this->assertTrue($res > 0);
+    }
+
+    public function testHashExist()
+    {
+        $collection = new DemoHashCollection();
+        $res = $collection->get(2);
+
+        $this->assertEquals([
+            'id' => 1,
+            'name' => 'limx'
+        ], $res);
+        $this->assertTrue($collection->exist(2) == 1);
+
+        $collection = new DemoHashCollection3();
+        $res = $collection->get(2);
+        $this->assertTrue(empty($res));
+        $this->assertFalse($collection->exist(2) == 1);
     }
 
     public function testHIncr()
