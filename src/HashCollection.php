@@ -25,6 +25,12 @@ abstract class HashCollection
      */
     protected $ttl = 0;
 
+    /**
+     * 是否认为当前HASH一定存在
+     * @var bool
+     */
+    protected $exist = false;
+
     const DEFAULT_KEY = 'swoft:none';
 
     const DEFAULT_VALUE = 'none';
@@ -51,15 +57,18 @@ abstract class HashCollection
      */
     public function initialize($parentId)
     {
-        $hash = $this->reload($parentId);
-        $hash[static::DEFAULT_KEY] = static::DEFAULT_VALUE;
-        $key = $this->getCacheKey($parentId);
+        $hash = [];
+        if ($this->isInitialize()) {
+            $hash = $this->reload($parentId);
+            $hash[static::DEFAULT_KEY] = static::DEFAULT_VALUE;
+            $key = $this->getCacheKey($parentId);
 
-        $this->redis()->hMset($key, $hash);
+            $this->redis()->hMset($key, $hash);
 
-        // 增加超时时间配置
-        if (is_int($this->getTtl()) && $this->getTtl() > 0) {
-            $this->redis()->expire($key, $this->getTtl());
+            // 增加超时时间配置
+            if (is_int($this->getTtl()) && $this->getTtl() > 0) {
+                $this->redis()->expire($key, $this->getTtl());
+            }
         }
 
         return $hash;
@@ -76,6 +85,14 @@ abstract class HashCollection
         $key = $this->getCacheKey($parentId);
 
         return $this->redis()->exists($key);
+    }
+
+    /**
+     * 是否需要初始化数据
+     */
+    protected function isInitialize(): bool
+    {
+        return !$this->exist;
     }
 
     /**
