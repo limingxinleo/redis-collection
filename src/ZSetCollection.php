@@ -20,6 +20,12 @@ abstract class ZSetCollection
     protected $prefix;
 
     /**
+     * 超时时间
+     * @var int
+     */
+    protected $ttl = 0;
+
+    /**
      * 是否认为当前ZSET一定存在
      * @var bool
      */
@@ -59,6 +65,10 @@ abstract class ZSetCollection
         $key = $this->getCacheKey($parentId);
 
         $this->redis()->zAdd($key, ...$params);
+        // 增加超时时间
+        if (is_int($this->getTtl()) && $this->getTtl() > 0) {
+            $this->redis()->expire($key, $this->getTtl());
+        }
 
         return $list;
     }
@@ -216,6 +226,14 @@ abstract class ZSetCollection
         }
 
         return $count;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTtl(): int
+    {
+        return $this->ttl;
     }
 
     protected function getCacheKey($parentId)
