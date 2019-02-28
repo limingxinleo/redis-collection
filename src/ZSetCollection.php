@@ -109,10 +109,15 @@ abstract class ZSetCollection
      * @param $parentId
      * @return array
      */
-    public function all($parentId)
+    public function all($parentId, $sort = SORT_DESC)
     {
         $key = $this->getCacheKey($parentId);
-        $res = $this->redis()->zRevRange($key, 0, -1, true);
+        if ($sort !== SORT_ASC) {
+            $res = $this->redis()->zRevRange($key, 0, -1, true);
+        } else {
+            $res = $this->redis()->zRange($key, 0, -1, true);
+        }
+
         if (empty($res)) {
             return $this->initialize($parentId);
         }
