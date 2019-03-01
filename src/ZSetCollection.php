@@ -33,6 +33,10 @@ abstract class ZSetCollection
 
     const DEFAULT_ID = 0;
 
+    const SORT_DESC = 'desc';
+
+    const SORT_ASC = 'asc';
+
     /**
      * 从DB中读取对应的全部列表
      * @author limx
@@ -109,10 +113,10 @@ abstract class ZSetCollection
      * @param $parentId
      * @return array
      */
-    public function all($parentId, $sort = SORT_DESC)
+    public function all($parentId, $sort = self::SORT_DESC)
     {
         $key = $this->getCacheKey($parentId);
-        if ($sort !== SORT_ASC) {
+        if ($sort !== self::SORT_ASC) {
             $res = $this->redis()->zRevRange($key, 0, -1, true);
         } else {
             $res = $this->redis()->zRange($key, 0, -1, true);
