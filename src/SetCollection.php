@@ -20,7 +20,13 @@ abstract class SetCollection
     protected $prefix;
 
     /**
-     * 是否认为当前SET一定存在
+     * 超时时间
+     * @var int
+     */
+    protected $ttl = 0;
+
+    /**
+     * 是否认为当前SET一定存在，若为true则超时时间无效
      * @var bool
      */
     protected $exist = false;
@@ -56,6 +62,9 @@ abstract class SetCollection
         $key = $this->getCacheKey($parentId);
 
         $this->redis()->sAdd($key, ...$params);
+        if ($this->getTtl() > 0) {
+            $this->redis()->expire($key, $this->getTtl());
+        }
 
         return $list;
     }
@@ -182,6 +191,14 @@ abstract class SetCollection
         }
 
         return $count;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTtl(): int
+    {
+        return $this->ttl;
     }
 
     protected function getCacheKey($parentId)

@@ -31,6 +31,8 @@ class SetCollectionTest extends AbstractTestCase
 
         $this->assertTrue($collection->redis()->exists('demoset:1') > 0);
         $this->assertTrue($collection->redis()->sCard('demoset:1') == 6);
+
+        $this->assertEquals(100, $collection->redis()->ttl('demoset:1'));
     }
 
     public function testIsMember()

@@ -16,6 +16,8 @@ class DemoSetCollection extends SetCollection
 {
     protected $prefix = 'demoset:';
 
+    protected $ttl = 100;
+
     protected $redis;
 
     public function __construct()

@@ -26,7 +26,7 @@ abstract class ZSetCollection
     protected $ttl = 0;
 
     /**
-     * 是否认为当前ZSET一定存在
+     * 是否认为当前ZSET一定存在，若为true则超时时间无效
      * @var bool
      */
     protected $exist = false;
