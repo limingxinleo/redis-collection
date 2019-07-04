@@ -29,6 +29,12 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^5.7",
-        "friendsofphp/php-cs-fixer": "^2.14"
+        "friendsofphp/php-cs-fixer": "^2.14",
+        "phpstan/phpstan": "^0.11.2"
+    },
+    "scripts": {
+        "test": "co-phpunit -c phpunit.xml --colors=always",
+        "cs-fix": "php-cs-fixer fix $1",
+        "analyze": "phpstan analyse --memory-limit 300M -l 0 ./src"
     }
 }
