@@ -16,7 +16,7 @@ use Xin\RedisCollection\Exceptions\CollectionException;
 
 trait CacheKeyTrait
 {
-    protected function getCacheKey($parentId)
+    protected function getCacheKey($parentId): string
     {
         if (empty($this->prefix)) {
             throw new CollectionException('The prefix is required!');
