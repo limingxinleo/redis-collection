@@ -12,10 +12,10 @@ declare(strict_types=1);
 
 namespace Xin\RedisCollection;
 
-use Xin\RedisCollection\Exceptions\CollectionException;
-
 abstract class SetCollection
 {
+    use CacheKeyTrait;
+
     const DEFAULT_ID = '0';
 
     /**
@@ -192,14 +192,5 @@ abstract class SetCollection
     public function getTtl(): int
     {
         return $this->ttl;
-    }
-
-    protected function getCacheKey($parentId)
-    {
-        if (empty($this->prefix)) {
-            throw new CollectionException('The prefix is required!');
-        }
-
-        return $this->prefix . $parentId;
     }
 }

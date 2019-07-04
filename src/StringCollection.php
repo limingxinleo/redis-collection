@@ -12,10 +12,10 @@ declare(strict_types=1);
 
 namespace Xin\RedisCollection;
 
-use Xin\RedisCollection\Exceptions\CollectionException;
-
 abstract class StringCollection
 {
+    use CacheKeyTrait;
+
     /**
      * redis key.
      * @var string
@@ -88,14 +88,5 @@ abstract class StringCollection
         $key = $this->getCacheKey($id);
 
         return $this->redis()->ttl($key);
-    }
-
-    protected function getCacheKey($id)
-    {
-        if (empty($this->prefix)) {
-            throw new CollectionException('The prefix is required!');
-        }
-
-        return $this->prefix . $id;
     }
 }

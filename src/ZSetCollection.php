@@ -12,10 +12,10 @@ declare(strict_types=1);
 
 namespace Xin\RedisCollection;
 
-use Xin\RedisCollection\Exceptions\CollectionException;
-
 abstract class ZSetCollection
 {
+    use CacheKeyTrait;
+
     const DEFAULT_ID = 0;
 
     const SORT_DESC = 'desc';
@@ -237,14 +237,5 @@ abstract class ZSetCollection
     public function getTtl(): int
     {
         return $this->ttl;
-    }
-
-    protected function getCacheKey($parentId)
-    {
-        if (empty($this->prefix)) {
-            throw new CollectionException('The prefix is required!');
-        }
-
-        return $this->prefix . $parentId;
     }
 }
