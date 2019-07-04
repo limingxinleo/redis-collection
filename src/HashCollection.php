@@ -37,23 +37,23 @@ abstract class HashCollection
 
     /**
      * 从DB中读取对应的全部列表
-     * @author limx
      * @param $parentId
      * @return array
+     * @author limx
      */
     abstract public function reload($parentId);
 
     /**
      * 返回Redis实例
-     * @author limx
      * @return \Redis
+     * @author limx
      */
     abstract public function redis();
 
     /**
      * Redis数据初始化
-     * @author limx
      * @param $parentId
+     * @author limx
      */
     public function initialize($parentId)
     {
@@ -76,9 +76,9 @@ abstract class HashCollection
 
     /**
      * 当前列表是否存在
-     * @author limx
      * @param $parentId
      * @return mixed
+     * @author limx
      */
     public function exist($parentId)
     {
@@ -97,9 +97,9 @@ abstract class HashCollection
 
     /**
      * 查询所有数据
-     * @author limx
      * @param $parentId
      * @return array
+     * @author limx
      */
     public function get($parentId)
     {
@@ -115,11 +115,11 @@ abstract class HashCollection
 
     /**
      * 将元素插入到列表
-     * @author limx
      * @param $parentId
      * @param $score
      * @param $value
      * @return int
+     * @author limx
      */
     public function set($parentId, $hkey, $hvalue)
     {
@@ -134,10 +134,10 @@ abstract class HashCollection
 
     /**
      * 累加、累减
-     * @author limx
      * @param $parentId
      * @param $hkey
      * @param $hvalue
+     * @author limx
      */
     public function incr($parentId, $hkey, $hvalue)
     {
@@ -152,11 +152,11 @@ abstract class HashCollection
 
     /**
      * 将多个元素插入到列表
-     * @author limx
      * @param $parentId
      * @param $score
      * @param $value
      * @return int
+     * @author limx
      */
     public function mset($parentId, $hashKeys)
     {
@@ -171,10 +171,10 @@ abstract class HashCollection
 
     /**
      * 删除hash
-     * @author limx
      * @param $parentId
      * @param $value
      * @return int
+     * @author limx
      */
     public function delete($parentId)
     {
@@ -185,9 +185,9 @@ abstract class HashCollection
 
     /**
      * 超时时间
-     * @author limx
      * @param $parentId
      * @return int
+     * @author limx
      */
     public function ttl($parentId)
     {
@@ -200,7 +200,7 @@ abstract class HashCollection
         return $this->redis()->ttl($key);
     }
 
-    protected function getCacheKey($parentId)
+    protected function getCacheKey($parentId): string
     {
         if (empty($this->prefix)) {
             throw new CollectionException('The prefix is required!');
