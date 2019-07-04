@@ -1,11 +1,13 @@
 <?php
+
+declare(strict_types=1);
 /**
- * This file is part of Swoft.
+ * This file is part of Hyperf.
  *
- * @link     https://swoft.org
- * @document https://doc.swoft.org
- * @contact  limingxin@swoft.org
- * @license  https://github.com/swoft-cloud/swoft/blob/master/LICENSE
+ * @link     https://www.hyperf.io
+ * @document https://doc.hyperf.io
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf-cloud/hyperf/blob/master/LICENSE
  */
 
 namespace SwoftTest\Testing;
@@ -33,7 +35,7 @@ class DemoHashCollection3 extends HashCollection
     {
         return [
             'id' => 1,
-            'name' => 'limx'
+            'name' => 'limx',
         ];
     }
 

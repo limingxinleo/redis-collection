@@ -1,11 +1,13 @@
 <?php
+
+declare(strict_types=1);
 /**
- * This file is part of Swoft.
+ * This file is part of Hyperf.
  *
- * @link     https://swoft.org
- * @document https://doc.swoft.org
- * @contact  limingxin@swoft.org
- * @license  https://github.com/swoft-cloud/swoft/blob/master/LICENSE
+ * @link     https://www.hyperf.io
+ * @document https://doc.hyperf.io
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf-cloud/hyperf/blob/master/LICENSE
  */
 
 namespace Xin\RedisCollection;
@@ -14,46 +16,43 @@ use Xin\RedisCollection\Exceptions\CollectionException;
 
 abstract class HashCollection
 {
-    /**
-     * redis key
-     * @var string
-     */
-    protected $prefix;
-
-    /**
-     * @var integer
-     */
-    protected $ttl = 0;
-
-    /**
-     * 是否认为当前HASH一定存在
-     * @var bool
-     */
-    protected $exist = false;
-
     const DEFAULT_KEY = 'swoft:none';
 
     const DEFAULT_VALUE = 'none';
 
     /**
-     * 从DB中读取对应的全部列表
+     * redis key.
+     * @var string
+     */
+    protected $prefix;
+
+    /**
+     * @var int
+     */
+    protected $ttl = 0;
+
+    /**
+     * 是否认为当前HASH一定存在.
+     * @var bool
+     */
+    protected $exist = false;
+
+    /**
+     * 从DB中读取对应的全部列表.
      * @param $parentId
      * @return array
-     * @author limx
      */
     abstract public function reload($parentId);
 
     /**
-     * 返回Redis实例
+     * 返回Redis实例.
      * @return \Redis
-     * @author limx
      */
     abstract public function redis();
 
     /**
-     * Redis数据初始化
+     * Redis数据初始化.
      * @param $parentId
-     * @author limx
      */
     public function initialize($parentId)
     {
@@ -75,10 +74,9 @@ abstract class HashCollection
     }
 
     /**
-     * 当前列表是否存在
+     * 当前列表是否存在.
      * @param $parentId
      * @return mixed
-     * @author limx
      */
     public function exist($parentId)
     {
@@ -88,18 +86,9 @@ abstract class HashCollection
     }
 
     /**
-     * 是否需要初始化数据
-     */
-    protected function isInitialize(): bool
-    {
-        return !$this->exist;
-    }
-
-    /**
-     * 查询所有数据
+     * 查询所有数据.
      * @param $parentId
      * @return array
-     * @author limx
      */
     public function get($parentId)
     {
@@ -114,16 +103,17 @@ abstract class HashCollection
     }
 
     /**
-     * 将元素插入到列表
+     * 将元素插入到列表.
      * @param $parentId
      * @param $score
      * @param $value
+     * @param mixed $hkey
+     * @param mixed $hvalue
      * @return int
-     * @author limx
      */
     public function set($parentId, $hkey, $hvalue)
     {
-        if (!$this->exist($parentId)) {
+        if (! $this->exist($parentId)) {
             $this->initialize($parentId);
         }
 
@@ -133,15 +123,14 @@ abstract class HashCollection
     }
 
     /**
-     * 累加、累减
+     * 累加、累减.
      * @param $parentId
      * @param $hkey
      * @param $hvalue
-     * @author limx
      */
     public function incr($parentId, $hkey, $hvalue)
     {
-        if (!$this->exist($parentId)) {
+        if (! $this->exist($parentId)) {
             $this->initialize($parentId);
         }
 
@@ -151,16 +140,16 @@ abstract class HashCollection
     }
 
     /**
-     * 将多个元素插入到列表
+     * 将多个元素插入到列表.
      * @param $parentId
      * @param $score
      * @param $value
+     * @param mixed $hashKeys
      * @return int
-     * @author limx
      */
     public function mset($parentId, $hashKeys)
     {
-        if (!$this->exist($parentId)) {
+        if (! $this->exist($parentId)) {
             $this->initialize($parentId);
         }
 
@@ -170,11 +159,10 @@ abstract class HashCollection
     }
 
     /**
-     * 删除hash
+     * 删除hash.
      * @param $parentId
      * @param $value
      * @return int
-     * @author limx
      */
     public function delete($parentId)
     {
@@ -184,20 +172,35 @@ abstract class HashCollection
     }
 
     /**
-     * 超时时间
+     * 超时时间.
      * @param $parentId
      * @return int
-     * @author limx
      */
     public function ttl($parentId)
     {
-        if (!$this->exist($parentId)) {
+        if (! $this->exist($parentId)) {
             $this->initialize($parentId);
         }
 
         $key = $this->getCacheKey($parentId);
 
         return $this->redis()->ttl($key);
+    }
+
+    /**
+     * @return int
+     */
+    public function getTtl(): int
+    {
+        return $this->ttl;
+    }
+
+    /**
+     * 是否需要初始化数据.
+     */
+    protected function isInitialize(): bool
+    {
+        return ! $this->exist;
     }
 
     protected function getCacheKey($parentId): string
@@ -207,13 +210,5 @@ abstract class HashCollection
         }
 
         return $this->prefix . $parentId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getTtl(): int
-    {
-        return $this->ttl;
     }
 }

@@ -1,56 +1,56 @@
 <?php
+
+declare(strict_types=1);
 /**
- * This file is part of Swoft.
+ * This file is part of Hyperf.
  *
- * @link     https://swoft.org
- * @document https://doc.swoft.org
- * @contact  limingxin@swoft.org
- * @license  https://github.com/swoft-cloud/swoft/blob/master/LICENSE
+ * @link     https://www.hyperf.io
+ * @document https://doc.hyperf.io
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf-cloud/hyperf/blob/master/LICENSE
  */
+
 namespace Xin\RedisCollection;
 
 use Xin\RedisCollection\Exceptions\CollectionException;
 
 abstract class SetCollection
 {
+    const DEFAULT_ID = '0';
+
     /**
-     * redis key
+     * redis key.
      * @var string
      */
     protected $prefix;
 
     /**
-     * 超时时间
+     * 超时时间.
      * @var int
      */
     protected $ttl = 0;
 
     /**
-     * 是否认为当前SET一定存在，若为true则超时时间无效
+     * 是否认为当前SET一定存在，若为true则超时时间无效.
      * @var bool
      */
     protected $exist = false;
 
-    const DEFAULT_ID = '0';
-
     /**
-     * 从DB中读取对应的全部列表
-     * @author limx
+     * 从DB中读取对应的全部列表.
      * @param $parentId
      * @return array
      */
     abstract public function reload($parentId): array;
 
     /**
-     * 返回Redis实例
-     * @author limx
+     * 返回Redis实例.
      * @return \Redis
      */
     abstract public function redis();
 
     /**
-     * Redis数据初始化
-     * @author limx
+     * Redis数据初始化.
      * @param $parentId
      */
     public function initialize($parentId)
@@ -70,8 +70,7 @@ abstract class SetCollection
     }
 
     /**
-     * 当前列表是否存在
-     * @author limx
+     * 当前列表是否存在.
      * @param $parentId
      * @return mixed
      */
@@ -87,8 +86,7 @@ abstract class SetCollection
     }
 
     /**
-     * 删除缓存
-     * @author limx
+     * 删除缓存.
      * @param $parentId
      * @return bool
      */
@@ -100,8 +98,7 @@ abstract class SetCollection
     }
 
     /**
-     * 查询所有数据
-     * @author limx
+     * 查询所有数据.
      * @param $parentId
      * @return array
      */
@@ -121,15 +118,14 @@ abstract class SetCollection
     }
 
     /**
-     * 将元素插入到列表
-     * @author limx
+     * 将元素插入到列表.
      * @param $parentId
      * @param $value
      * @return int
      */
     public function add($parentId, $value)
     {
-        if (!$this->exist($parentId)) {
+        if (! $this->exist($parentId)) {
             $this->initialize($parentId);
         }
 
@@ -143,13 +139,12 @@ abstract class SetCollection
 
     /**
      * 获取元素分值
-     * @author limx
      * @param $parentId
      * @param $value
      */
     public function isMember($parentId, $value)
     {
-        if (!$this->exist($parentId)) {
+        if (! $this->exist($parentId)) {
             $list = $this->initialize($parentId);
             return in_array($value, $list);
         }
@@ -160,8 +155,7 @@ abstract class SetCollection
     }
 
     /**
-     * 将此元素从列表中移除
-     * @author limx
+     * 将此元素从列表中移除.
      * @param $parentId
      * @param $value
      * @return int
@@ -174,8 +168,7 @@ abstract class SetCollection
     }
 
     /**
-     * 返回有序集合总数
-     * @author limx
+     * 返回有序集合总数.
      * @param $parentId
      */
     public function count($parentId)
@@ -187,7 +180,7 @@ abstract class SetCollection
             $list = $this->initialize($parentId);
             $count = count($list);
         } else {
-            $count--;
+            --$count;
         }
 
         return $count;

@@ -1,11 +1,13 @@
 <?php
+
+declare(strict_types=1);
 /**
- * This file is part of Swoft.
+ * This file is part of Hyperf.
  *
- * @link     https://swoft.org
- * @document https://doc.swoft.org
- * @contact  limingxin@swoft.org
- * @license  https://github.com/swoft-cloud/swoft/blob/master/LICENSE
+ * @link     https://www.hyperf.io
+ * @document https://doc.hyperf.io
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf-cloud/hyperf/blob/master/LICENSE
  */
 
 namespace Xin\RedisCollection;
@@ -15,35 +17,32 @@ abstract class HyperLogLogCounter
     use CacheKeyTrait;
 
     /**
-     * redis key
+     * redis key.
      * @var string
      */
     protected $prefix;
 
     /**
-     * 是否认为当前ZSET一定存在
+     * 是否认为当前ZSET一定存在.
      * @var bool
      */
     protected $exist = false;
 
     /**
-     * 从DB中读取对应的全部列表
-     * @author limx
+     * 从DB中读取对应的全部列表.
      * @param $parentId
      * @return array
      */
     abstract public function reload($parentId);
 
     /**
-     * 返回Redis实例
-     * @author limx
+     * 返回Redis实例.
      * @return \Redis
      */
     abstract public function redis();
 
     /**
-     * Redis数据初始化
-     * @author limx
+     * Redis数据初始化.
      * @param $parentId
      */
     public function initialize($parentId)
@@ -53,11 +52,37 @@ abstract class HyperLogLogCounter
         $this->redis()->pfAdd($key, $sets);
     }
 
+    public function add($parentId, array $ids)
+    {
+        if (! $this->check($parentId)) {
+            $this->initialize($parentId);
+        }
+
+        $key = $this->getCacheKey($parentId);
+        return $this->redis()->pfAdd($key, $ids);
+    }
+
+    public function count($parentId)
+    {
+        if (! $this->check($parentId)) {
+            $this->initialize($parentId);
+        }
+
+        $key = $this->getCacheKey($parentId);
+        return $this->redis()->pfCount($key);
+    }
+
+    public function clear($parentId)
+    {
+        $key = $this->getCacheKey($parentId);
+        return $this->redis()->del($key);
+    }
+
     /**
-     * 判断当前Counter是否存在
+     * 判断当前Counter是否存在.
      * @param $parentId
-     * @return bool
      * @throws Exceptions\CollectionException
+     * @return bool
      */
     protected function check($parentId)
     {
@@ -72,31 +97,5 @@ abstract class HyperLogLogCounter
         }
 
         return false;
-    }
-
-    public function add($parentId, array $ids)
-    {
-        if (!$this->check($parentId)) {
-            $this->initialize($parentId);
-        }
-
-        $key = $this->getCacheKey($parentId);
-        return $this->redis()->pfAdd($key, $ids);
-    }
-
-    public function count($parentId)
-    {
-        if (!$this->check($parentId)) {
-            $this->initialize($parentId);
-        }
-
-        $key = $this->getCacheKey($parentId);
-        return $this->redis()->pfCount($key);
-    }
-
-    public function clear($parentId)
-    {
-        $key = $this->getCacheKey($parentId);
-        return $this->redis()->del($key);
     }
 }

@@ -1,36 +1,21 @@
 <?php
+
+declare(strict_types=1);
 /**
- * This file is part of Swoft.
+ * This file is part of Hyperf.
  *
- * @link     https://swoft.org
- * @document https://doc.swoft.org
- * @contact  limingxin@swoft.org
- * @license  https://github.com/swoft-cloud/swoft/blob/master/LICENSE
+ * @link     https://www.hyperf.io
+ * @document https://doc.hyperf.io
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf-cloud/hyperf/blob/master/LICENSE
  */
+
 namespace Xin\RedisCollection;
 
 use Xin\RedisCollection\Exceptions\CollectionException;
 
 abstract class ZSetCollection
 {
-    /**
-     * redis key
-     * @var string
-     */
-    protected $prefix;
-
-    /**
-     * 超时时间
-     * @var int
-     */
-    protected $ttl = 0;
-
-    /**
-     * 是否认为当前ZSET一定存在，若为true则超时时间无效
-     * @var bool
-     */
-    protected $exist = false;
-
     const DEFAULT_ID = 0;
 
     const SORT_DESC = 'desc';
@@ -38,23 +23,38 @@ abstract class ZSetCollection
     const SORT_ASC = 'asc';
 
     /**
-     * 从DB中读取对应的全部列表
-     * @author limx
+     * redis key.
+     * @var string
+     */
+    protected $prefix;
+
+    /**
+     * 超时时间.
+     * @var int
+     */
+    protected $ttl = 0;
+
+    /**
+     * 是否认为当前ZSET一定存在，若为true则超时时间无效.
+     * @var bool
+     */
+    protected $exist = false;
+
+    /**
+     * 从DB中读取对应的全部列表.
      * @param $parentId
      * @return ['$id'=>'$score']
      */
     abstract public function reload($parentId);
 
     /**
-     * 返回Redis实例
-     * @author limx
+     * 返回Redis实例.
      * @return \Redis
      */
     abstract public function redis();
 
     /**
-     * Redis数据初始化
-     * @author limx
+     * Redis数据初始化.
      * @param $parentId
      */
     public function initialize($parentId)
@@ -62,7 +62,7 @@ abstract class ZSetCollection
         $list = $this->reload($parentId);
         $params = [0, static::DEFAULT_ID];
         foreach ($list as $id => $score) {
-            $params[] = (float)$score;
+            $params[] = (float) $score;
             $params[] = $id;
         }
 
@@ -78,8 +78,7 @@ abstract class ZSetCollection
     }
 
     /**
-     * 当前列表是否存在
-     * @author limx
+     * 当前列表是否存在.
      * @param $parentId
      * @return mixed
      */
@@ -95,8 +94,7 @@ abstract class ZSetCollection
     }
 
     /**
-     * 删除缓存
-     * @author limx
+     * 删除缓存.
      * @param $parentId
      * @return bool
      */
@@ -108,9 +106,9 @@ abstract class ZSetCollection
     }
 
     /**
-     * 查询所有数据
-     * @author limx
+     * 查询所有数据.
      * @param $parentId
+     * @param mixed $sort
      * @return array
      */
     public function all($parentId, $sort = self::SORT_DESC)
@@ -131,8 +129,7 @@ abstract class ZSetCollection
     }
 
     /**
-     * 将元素插入到列表
-     * @author limx
+     * 将元素插入到列表.
      * @param $parentId
      * @param $score
      * @param $value
@@ -140,7 +137,7 @@ abstract class ZSetCollection
      */
     public function add($parentId, $score, $value)
     {
-        if (!$this->exist($parentId)) {
+        if (! $this->exist($parentId)) {
             $this->initialize($parentId);
         }
 
@@ -150,7 +147,6 @@ abstract class ZSetCollection
     }
 
     /**
-     * @author limx
      * @param $parentId
      * @param $score
      * @param $value
@@ -158,7 +154,7 @@ abstract class ZSetCollection
      */
     public function incr($parentId, $score, $value)
     {
-        if (!$this->exist($parentId)) {
+        if (! $this->exist($parentId)) {
             $this->initialize($parentId);
         }
 
@@ -169,13 +165,12 @@ abstract class ZSetCollection
 
     /**
      * 获取元素分值
-     * @author limx
      * @param $parentId
      * @param $value
      */
     public function score($parentId, $value)
     {
-        if (!$this->exist($parentId)) {
+        if (! $this->exist($parentId)) {
             $this->initialize($parentId);
         }
 
@@ -185,8 +180,7 @@ abstract class ZSetCollection
     }
 
     /**
-     * 将此元素从列表中移除
-     * @author limx
+     * 将此元素从列表中移除.
      * @param $parentId
      * @param $value
      * @return int
@@ -199,9 +193,10 @@ abstract class ZSetCollection
     }
 
     /**
-     * 分页查询
-     * @author limx
-     * @param       $parentId
+     * 分页查询.
+     * @param $parentId
+     * @param mixed $offset
+     * @param mixed $limit
      * @return ['$count',['$id'=>'$score']]
      */
     public function pagination($parentId, $offset = 0, $limit = 10)
@@ -218,8 +213,7 @@ abstract class ZSetCollection
     }
 
     /**
-     * 返回有序集合总数
-     * @author limx
+     * 返回有序集合总数.
      * @param $parentId
      */
     public function count($parentId)
@@ -231,7 +225,7 @@ abstract class ZSetCollection
             $list = $this->initialize($parentId);
             $count = count($list);
         } else {
-            $count--;
+            --$count;
         }
 
         return $count;
