@@ -12,10 +12,10 @@ declare(strict_types=1);
 
 namespace Xin\RedisCollection;
 
-use Xin\RedisCollection\Exceptions\CollectionException;
-
 abstract class HashCollection
 {
+    use CacheKeyTrait;
+
     const DEFAULT_KEY = 'swoft:none';
 
     const DEFAULT_VALUE = 'none';
@@ -201,14 +201,5 @@ abstract class HashCollection
     protected function isInitialize(): bool
     {
         return ! $this->exist;
-    }
-
-    protected function getCacheKey($parentId): string
-    {
-        if (empty($this->prefix)) {
-            throw new CollectionException('The prefix is required!');
-        }
-
-        return $this->prefix . $parentId;
     }
 }
