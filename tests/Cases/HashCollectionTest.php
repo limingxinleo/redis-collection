@@ -24,6 +24,12 @@ class HashCollectionTest extends AbstractTestCase
 {
     protected $pid = 1;
 
+    protected function tearDown()
+    {
+        $collection = new DemoHashCollection();
+        $collection->delete($this->pid);
+    }
+
     public function testSet()
     {
         $collection = new DemoHashCollection();
@@ -41,6 +47,19 @@ class HashCollectionTest extends AbstractTestCase
             'id' => 1,
             'name' => 'limx',
             'age' => 18,
+        ], $collection->get($this->pid));
+    }
+
+    public function testSetNotString()
+    {
+        $collection = new DemoHashCollection();
+
+        $collection->set($this->pid, 12345, 18);
+
+        $this->assertEquals([
+            'id' => 1,
+            'name' => 'limx',
+            '12345' => 18,
         ], $collection->get($this->pid));
     }
 

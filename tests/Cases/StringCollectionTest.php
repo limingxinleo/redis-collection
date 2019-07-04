@@ -22,6 +22,12 @@ class StringCollectionTest extends AbstractTestCase
 {
     protected $pid = 1;
 
+    protected function tearDown()
+    {
+        $collection = new DemoStringCollection();
+        $collection->delete($this->pid);
+    }
+
     public function testSet()
     {
         $collection = new DemoStringCollection();
@@ -30,6 +36,15 @@ class StringCollectionTest extends AbstractTestCase
 
         $this->assertTrue($collection->redis()->exists('demostring:1') > 0);
         $this->assertEquals('xxxxx', $collection->redis()->get('demostring:1'));
+    }
+
+    public function testSetNotString()
+    {
+        $collection = new DemoStringCollection();
+        $collection->set($this->pid, 1111, 18);
+
+        $this->assertTrue($collection->redis()->exists('demostring:1') > 0);
+        $this->assertEquals(1111, $collection->redis()->get('demostring:1'));
     }
 
     public function testGet()

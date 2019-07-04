@@ -107,8 +107,8 @@ abstract class HashCollection
      * @param $parentId
      * @param $score
      * @param $value
-     * @param mixed $hkey
-     * @param mixed $hvalue
+     * @param string $hkey
+     * @param string $hvalue
      * @return int
      */
     public function set($parentId, $hkey, $hvalue)
@@ -119,14 +119,14 @@ abstract class HashCollection
 
         $key = $this->getCacheKey($parentId);
 
-        return $this->redis()->hSet($key, $hkey, $hvalue);
+        return $this->redis()->hSet($key, (string) $hkey, $hvalue);
     }
 
     /**
      * 累加、累减.
      * @param $parentId
-     * @param $hkey
-     * @param $hvalue
+     * @param string $hkey
+     * @param float $hvalue
      */
     public function incr($parentId, $hkey, $hvalue)
     {
@@ -136,7 +136,7 @@ abstract class HashCollection
 
         $key = $this->getCacheKey($parentId);
 
-        return $this->redis()->hIncrByFloat($key, $hkey, $hvalue);
+        return $this->redis()->hIncrByFloat($key, (string) $hkey, (float) $hvalue);
     }
 
     /**
