@@ -32,6 +32,11 @@
         "friendsofphp/php-cs-fixer": "^2.14",
         "phpstan/phpstan": "^0.11.2"
     },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.2-dev"
+        }
+    },
     "scripts": {
         "test": "phpunit -c phpunit.xml --colors=always",
         "cs-fix": "php-cs-fixer fix $1",
