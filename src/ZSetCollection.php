@@ -206,8 +206,7 @@ abstract class ZSetCollection
         $count = $this->count($parentId);
 
         $end = $offset + $limit - 1;
-        $items = $this->redis()->zRevRange($key, $offset, $end, true);
-
+        $items = $this->redis()->zRevRange($key, (int) $offset, (int) $end, true);
         unset($items[static::DEFAULT_ID]);
         return [$count, $items];
     }
