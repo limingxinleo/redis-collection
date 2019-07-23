@@ -71,9 +71,17 @@ class ZSetCollectionTest extends AbstractTestCase
         $collection = new DemoCollection();
         $collection->delete($this->pid);
 
-        [$count, $item] = $collection->pagination($this->pid, 0, 1);
-        $this->assertEquals(2, $count);
-        $this->assertEquals([2 => 1], $item);
+        $collection->add($this->pid, 2, 3);
+        $collection->add($this->pid, 3, 4);
+        $collection->add($this->pid, 4, 5);
+
+        [$count, $item] = $collection->pagination($this->pid, 0, 2);
+        $this->assertEquals(5, $count);
+        $this->assertEquals([5 => 4, 4 => 3], $item);
+
+        [$count, $item] = $collection->pagination($this->pid, 2, 2);
+        $this->assertEquals(5, $count);
+        $this->assertEquals([3 => 2, 2 => 1], $item);
     }
 
     public function testZSetCount()
