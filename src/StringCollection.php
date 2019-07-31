@@ -62,7 +62,7 @@ abstract class StringCollection
     public function set($id, $value, $ttl = 3600)
     {
         $key = $this->getCacheKey($id);
-        if (!is_null($ttl)) {
+        if (! is_null($ttl)) {
             return $this->redis()->set($key, $value, $ttl);
         }
         return $this->redis()->set($key, $value);
