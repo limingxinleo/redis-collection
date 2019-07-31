@@ -55,7 +55,7 @@ abstract class StringCollection
     /**
      * 设置数据.
      * @param $id
-     * @param $value 数据
+     * @param string $value 数据
      * @param int $ttl 超时时间 秒
      * @return bool
      */
