@@ -26,7 +26,7 @@ class SetCollectionTest extends AbstractTestCase
     protected function tearDown()
     {
         $collection = new DemoSetCollection();
-        $collection->redis()->delete('demoset:1');
+        $collection->redis()->del('demoset:1');
 
         parent::tearDown();
     }

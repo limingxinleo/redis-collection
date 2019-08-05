@@ -76,7 +76,7 @@ abstract class StringCollection
     {
         $key = $this->getCacheKey($id);
 
-        return $this->redis()->delete($key);
+        return $this->redis()->del($key);
     }
 
     /**
