@@ -111,6 +111,22 @@ class HashCollectionTest extends AbstractTestCase
         $collection->delete($this->pid);
     }
 
+    public function testHdel()
+    {
+        $collection = new DemoHashCollection();
+        $collection->setExist(true);
+        $collection->delete($this->pid);
+
+        $collection->mset($this->pid, ['id' => 1, 'age' => 18, 'sex' => 1]);
+
+        $this->assertTrue($collection->redis()->exists('demohash:1') > 0);
+        $this->assertTrue($collection->hdel($this->pid, 'age', 'sex') == 2);
+        $this->assertEquals([
+            'id' => 1,
+        ], $collection->get($this->pid));
+        $collection->delete($this->pid);
+    }
+
     public function testDelete()
     {
         $collection = new DemoHashCollection();

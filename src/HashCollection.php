@@ -177,6 +177,20 @@ abstract class HashCollection
     }
 
     /**
+     * 删除key.
+     * @param $parentId
+     * @param $hashKey1
+     * @param mixed ...$hashKey
+     * @throws Exceptions\CollectionException
+     * @return false|int
+     */
+    public function hdel($parentId, $hashKey1, ...$hashKey)
+    {
+        $key = $this->getCacheKey($parentId);
+        return $this->redis()->hDel($key, $hashKey1, ...$hashKey);
+    }
+
+    /**
      * 删除hash.
      * @param $parentId
      * @param $value
