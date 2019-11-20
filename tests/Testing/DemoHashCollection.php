@@ -39,4 +39,9 @@ class DemoHashCollection extends HashCollection
     {
         return $this->redis;
     }
+
+    public function setExist(bool $status)
+    {
+        $this->exist = $status;
+    }
 }
