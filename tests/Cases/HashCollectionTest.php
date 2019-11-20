@@ -100,6 +100,17 @@ class HashCollectionTest extends AbstractTestCase
         ], $collection->get($this->pid));
     }
 
+    public function testHget()
+    {
+        $collection = new DemoHashCollection();
+        $collection->delete($this->pid);
+        $collection->mset($this->pid, ['age' => 18]);
+
+        $this->assertTrue($collection->redis()->exists('demohash:1') > 0);
+        $this->assertTrue($collection->hget($this->pid, 'age') == 18);
+        $collection->delete($this->pid);
+    }
+
     public function testDelete()
     {
         $collection = new DemoHashCollection();

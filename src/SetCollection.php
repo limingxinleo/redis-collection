@@ -39,7 +39,6 @@ abstract class SetCollection
     /**
      * 从DB中读取对应的全部列表.
      * @param $parentId
-     * @return array
      */
     abstract public function reload($parentId): array;
 
@@ -118,6 +117,19 @@ abstract class SetCollection
     }
 
     /**
+     * 删除默认值
+     * @return array
+     */
+    public function deleteDefault(array $res)
+    {
+        $key = array_search(static::DEFAULT_ID, $res);
+        if ($key !== false) {
+            unset($res[$key]);
+        }
+        return $res;
+    }
+
+    /**
      * 将元素插入到列表.
      * @param $parentId
      * @param $value
@@ -186,9 +198,6 @@ abstract class SetCollection
         return $count;
     }
 
-    /**
-     * @return int
-     */
     public function getTtl(): int
     {
         return $this->ttl;

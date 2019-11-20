@@ -159,6 +159,24 @@ abstract class HashCollection
     }
 
     /**
+     * 查询单个值
+     * @param $parentId
+     * @param $hashKey
+     * @throws Exceptions\CollectionException
+     * @return string
+     */
+    public function hget($parentId, $hashKey)
+    {
+        if (! $this->exist($parentId)) {
+            $this->initialize($parentId);
+        }
+
+        $key = $this->getCacheKey($parentId);
+
+        return $this->redis()->hGet($key, $hashKey);
+    }
+
+    /**
      * 删除hash.
      * @param $parentId
      * @param $value
@@ -187,9 +205,6 @@ abstract class HashCollection
         return $this->redis()->ttl($key);
     }
 
-    /**
-     * @return int
-     */
     public function getTtl(): int
     {
         return $this->ttl;
