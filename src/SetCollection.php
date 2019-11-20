@@ -118,6 +118,20 @@ abstract class SetCollection
     }
 
     /**
+     * 删除默认值
+     * @param array $res
+     * @return array
+     */
+    public function deleteDefault(array $res)
+    {
+        $key = array_search(static::DEFAULT_ID, $res);
+        if ($key !== false) {
+            unset($res[$key]);
+        }
+        return $res;
+    }
+
+    /**
      * 将元素插入到列表.
      * @param $parentId
      * @param $value
@@ -125,7 +139,7 @@ abstract class SetCollection
      */
     public function add($parentId, $value)
     {
-        if (! $this->exist($parentId)) {
+        if (!$this->exist($parentId)) {
             $this->initialize($parentId);
         }
 
@@ -144,7 +158,7 @@ abstract class SetCollection
      */
     public function isMember($parentId, $value)
     {
-        if (! $this->exist($parentId)) {
+        if (!$this->exist($parentId)) {
             $list = $this->initialize($parentId);
             return in_array($value, $list);
         }

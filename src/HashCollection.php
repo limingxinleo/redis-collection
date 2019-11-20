@@ -113,13 +113,13 @@ abstract class HashCollection
      */
     public function set($parentId, $hkey, $hvalue)
     {
-        if (! $this->exist($parentId)) {
+        if (!$this->exist($parentId)) {
             $this->initialize($parentId);
         }
 
         $key = $this->getCacheKey($parentId);
 
-        return $this->redis()->hSet($key, (string) $hkey, $hvalue);
+        return $this->redis()->hSet($key, (string)$hkey, $hvalue);
     }
 
     /**
@@ -130,13 +130,13 @@ abstract class HashCollection
      */
     public function incr($parentId, $hkey, $hvalue)
     {
-        if (! $this->exist($parentId)) {
+        if (!$this->exist($parentId)) {
             $this->initialize($parentId);
         }
 
         $key = $this->getCacheKey($parentId);
 
-        return $this->redis()->hIncrByFloat($key, (string) $hkey, (float) $hvalue);
+        return $this->redis()->hIncrByFloat($key, (string)$hkey, (float)$hvalue);
     }
 
     /**
@@ -149,13 +149,31 @@ abstract class HashCollection
      */
     public function mset($parentId, $hashKeys)
     {
-        if (! $this->exist($parentId)) {
+        if (!$this->exist($parentId)) {
             $this->initialize($parentId);
         }
 
         $key = $this->getCacheKey($parentId);
 
         return $this->redis()->hMset($key, $hashKeys);
+    }
+
+    /**
+     * 查询单个值
+     * @param $parentId
+     * @param $hashKey
+     * @return string
+     * @throws Exceptions\CollectionException
+     */
+    public function hget($parentId, $hashKey)
+    {
+        if (!$this->exist($parentId)) {
+            $this->initialize($parentId);
+        }
+
+        $key = $this->getCacheKey($parentId);
+
+        return $this->redis()->hGet($key, $hashKey);
     }
 
     /**
@@ -178,7 +196,7 @@ abstract class HashCollection
      */
     public function ttl($parentId)
     {
-        if (! $this->exist($parentId)) {
+        if (!$this->exist($parentId)) {
             $this->initialize($parentId);
         }
 
@@ -200,6 +218,6 @@ abstract class HashCollection
      */
     protected function isInitialize(): bool
     {
-        return ! $this->exist;
+        return !$this->exist;
     }
 }
