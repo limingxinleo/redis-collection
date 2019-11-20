@@ -107,7 +107,7 @@ class HashCollectionTest extends AbstractTestCase
         $collection->mset($this->pid, ['age' => 18]);
 
         $this->assertTrue($collection->redis()->exists('demohash:1') > 0);
-        $this->assertTrue( 18 == $collection->hget($this->pid , "age" ));
+        $this->assertTrue($collection->hget($this->pid, 'age') == 18);
         $collection->delete($this->pid);
     }
 

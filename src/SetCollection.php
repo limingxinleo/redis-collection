@@ -39,7 +39,6 @@ abstract class SetCollection
     /**
      * 从DB中读取对应的全部列表.
      * @param $parentId
-     * @return array
      */
     abstract public function reload($parentId): array;
 
@@ -119,7 +118,6 @@ abstract class SetCollection
 
     /**
      * 删除默认值
-     * @param array $res
      * @return array
      */
     public function deleteDefault(array $res)
@@ -139,7 +137,7 @@ abstract class SetCollection
      */
     public function add($parentId, $value)
     {
-        if (!$this->exist($parentId)) {
+        if (! $this->exist($parentId)) {
             $this->initialize($parentId);
         }
 
@@ -158,7 +156,7 @@ abstract class SetCollection
      */
     public function isMember($parentId, $value)
     {
-        if (!$this->exist($parentId)) {
+        if (! $this->exist($parentId)) {
             $list = $this->initialize($parentId);
             return in_array($value, $list);
         }
@@ -200,9 +198,6 @@ abstract class SetCollection
         return $count;
     }
 
-    /**
-     * @return int
-     */
     public function getTtl(): int
     {
         return $this->ttl;

@@ -230,9 +230,6 @@ abstract class ZSetCollection
         return $count;
     }
 
-    /**
-     * @return int
-     */
     public function getTtl(): int
     {
         return $this->ttl;
