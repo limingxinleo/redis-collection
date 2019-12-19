@@ -36,12 +36,6 @@ abstract class HyperLogLogCounter
     abstract public function reload($parentId);
 
     /**
-     * 返回Redis实例.
-     * @return \Redis
-     */
-    abstract public function redis();
-
-    /**
      * Redis数据初始化.
      * @param $parentId
      */

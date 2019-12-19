@@ -43,12 +43,6 @@ abstract class SetCollection
     abstract public function reload($parentId): array;
 
     /**
-     * 返回Redis实例.
-     * @return \Redis
-     */
-    abstract public function redis();
-
-    /**
      * Redis数据初始化.
      * @param $parentId
      */
@@ -61,9 +55,7 @@ abstract class SetCollection
         $key = $this->getCacheKey($parentId);
 
         $this->redis()->sAdd($key, ...$params);
-        if ($this->getTtl() > 0) {
-            $this->redis()->expire($key, $this->getTtl());
-        }
+        $this->expire($parentId);
 
         return $list;
     }

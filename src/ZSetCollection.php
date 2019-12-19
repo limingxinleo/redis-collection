@@ -41,13 +41,6 @@ abstract class ZSetCollection
     protected $exist = false;
 
     /**
-     * 从DB中读取对应的全部列表.
-     * @param $parentId
-     * @return ['$id'=>'$score']
-     */
-    abstract public function reload($parentId);
-
-    /**
      * 返回Redis实例.
      * @return \Redis
      */
@@ -70,9 +63,7 @@ abstract class ZSetCollection
 
         $this->redis()->zAdd($key, ...$params);
         // 增加超时时间
-        if (is_int($this->getTtl()) && $this->getTtl() > 0) {
-            $this->redis()->expire($key, $this->getTtl());
-        }
+        $this->expire($parentId);
 
         return $list;
     }

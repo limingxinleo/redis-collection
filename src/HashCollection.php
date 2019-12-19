@@ -45,12 +45,6 @@ abstract class HashCollection
     abstract public function reload($parentId);
 
     /**
-     * 返回Redis实例.
-     * @return \Redis
-     */
-    abstract public function redis();
-
-    /**
      * Redis数据初始化.
      * @param $parentId
      */
@@ -65,9 +59,7 @@ abstract class HashCollection
             $this->redis()->hMset($key, $hash);
 
             // 增加超时时间配置
-            if (is_int($this->getTtl()) && $this->getTtl() > 0) {
-                $this->redis()->expire($key, $this->getTtl());
-            }
+            $this->expire($parentId);
         }
 
         return $hash;
@@ -97,7 +89,6 @@ abstract class HashCollection
         if (empty($res)) {
             $res = $this->initialize($parentId);
         }
-
         unset($res[static::DEFAULT_KEY]);
         return $res;
     }
@@ -119,7 +110,10 @@ abstract class HashCollection
 
         $key = $this->getCacheKey($parentId);
 
-        return $this->redis()->hSet($key, (string) $hkey, $hvalue);
+        $return = $this->redis()->hSet($key, (string) $hkey, $hvalue);
+        // 增加超时时间配置
+        $this->expire($parentId);
+        return  $return;
     }
 
     /**
@@ -136,7 +130,10 @@ abstract class HashCollection
 
         $key = $this->getCacheKey($parentId);
 
-        return $this->redis()->hIncrByFloat($key, (string) $hkey, (float) $hvalue);
+        $return = $this->redis()->hIncrByFloat($key, (string) $hkey, (float) $hvalue);
+        // 增加超时时间配置
+        $this->expire($parentId);
+        return $return;
     }
 
     /**
@@ -155,7 +152,10 @@ abstract class HashCollection
 
         $key = $this->getCacheKey($parentId);
 
-        return $this->redis()->hMset($key, $hashKeys);
+        $return = $this->redis()->hMset($key, $hashKeys);
+        // 增加超时时间配置
+        $this->expire($parentId);
+        return $return;
     }
 
     /**
@@ -217,11 +217,6 @@ abstract class HashCollection
         $key = $this->getCacheKey($parentId);
 
         return $this->redis()->ttl($key);
-    }
-
-    public function getTtl(): int
-    {
-        return $this->ttl;
     }
 
     /**
