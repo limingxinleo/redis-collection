@@ -35,6 +35,24 @@ class ZSetCollectionTest extends AbstractTestCase
         $this->assertEquals(3, $collection->score($this->pid, 3));
     }
 
+    public function testAddMore()
+    {
+        $collection = new DemoCollection();
+        $collection->add($this->pid, 2, 3, 4, 'v4');
+
+        $this->assertTrue($collection->redis()->exists('demo:1') > 0);
+        $this->assertTrue($collection->redis()->zScore('demo:1', 3) == 2);
+        $this->assertTrue($collection->redis()->zScore('demo:1', 'v4') == 4);
+
+        $collection->incr($this->pid, 1, 3);
+        $this->assertTrue($collection->redis()->zScore('demo:1', 3) == 3);
+        $this->assertEquals(3, $collection->score($this->pid, 3));
+
+        $collection->incr($this->pid, 1, 'v4');
+        $this->assertTrue($collection->redis()->zScore('demo:1', 'v4') == 5);
+        $this->assertEquals(5, $collection->score($this->pid, 'v4'));
+    }
+
     public function testScore()
     {
         $collection = new DemoCollection();

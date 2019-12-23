@@ -135,7 +135,7 @@ abstract class ZSetCollection
      * @param $value
      * @return int
      */
-    public function add($parentId, $score, $value)
+    public function add($parentId, ...$arguments)
     {
         if (! $this->exist($parentId)) {
             $this->initialize($parentId);
@@ -143,7 +143,7 @@ abstract class ZSetCollection
 
         $key = $this->getCacheKey($parentId);
 
-        return $this->redis()->zAdd($key, $score, $value);
+        return $this->redis()->zAdd($key, ...$arguments);
     }
 
     /**
