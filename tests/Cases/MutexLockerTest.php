@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace SwoftTest\Cases;
 
 use SwoftTest\Testing\DemoMutexLocker;
+use SwoftTest\Testing\DemoMutexLockerDelFailed;
 use Xin\RedisCollection\Exceptions\MutexLockerException;
 
 /**
@@ -51,5 +52,34 @@ class MutexLockerTest extends AbstractTestCase
             $this->assertTrue(false);
             return $uniqid;
         }, 5);
+    }
+
+    public function testTryMutexLockerAgain()
+    {
+        $locker = new DemoMutexLocker();
+        $locker->redis()->set('demo:mutex:locker:1', '1', ['NX', 'PX' => 50]);
+        $uniqid = uniqid();
+
+        $result = $locker->try(1, function () use ($uniqid) {
+            return $uniqid;
+        });
+
+        $this->assertSame($result, $uniqid);
+        $this->assertSame(1, $locker->id);
+    }
+
+    public function testTryMutexLockerDelFailed()
+    {
+        $locker = new DemoMutexLockerDelFailed();
+        $uniqid = uniqid();
+
+        $result = $locker->try(1, function () use ($uniqid) {
+            return $uniqid;
+        });
+
+        $this->assertSame($result, $uniqid);
+        $ttl = $locker->redis()->ttl('demo:mutex:locker:1');
+
+        $this->assertEquals(2, $ttl);
     }
 }

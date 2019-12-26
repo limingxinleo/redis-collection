@@ -14,7 +14,7 @@ namespace SwoftTest\Testing;
 
 use Xin\RedisCollection\MutexLocker;
 
-class DemoMutexLocker extends MutexLocker
+class DemoMutexLockerDelFailed extends MutexLocker
 {
     public $id = 0;
 
@@ -31,6 +31,10 @@ class DemoMutexLocker extends MutexLocker
     public function redis()
     {
         return $this->redis;
+    }
+
+    public function del($id)
+    {
     }
 
     protected function wait(int $ms): void

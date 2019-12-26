@@ -21,7 +21,7 @@ abstract class MutexLocker
     protected $prefix = '';
 
     /**
-     * @var int 锁超时时间
+     * @var float 锁超时时间
      */
     protected $lockTime = 2;
 
@@ -41,7 +41,6 @@ abstract class MutexLocker
      */
     public function try($id, \Closure $closure, int $times = 2, int $ms = 100, $runAgain = true)
     {
-        $key = $this->getCacheKey($id);
         $result = null;
 
         try {
@@ -50,10 +49,10 @@ abstract class MutexLocker
 
             beginning:
             $tryCount++;
-            if ($this->redis()->set($key, '1', ['NX', 'EX' => $this->lockTime]) !== true) {
+            if ($this->redis()->set($this->getCacheKey($id), '1', ['NX', 'PX' => $this->lockTime * 1000]) !== true) {
                 if ($tryCount < $times) {
                     $runFirst = false;
-                    usleep($ms * 1000);
+                    $this->wait($ms);
                     goto beginning;
                 }
 
@@ -64,7 +63,7 @@ abstract class MutexLocker
                 $result = $closure();
             }
         } finally {
-            $this->redis()->del($key);
+            $this->del($id);
         }
 
         return $result;
@@ -77,5 +76,12 @@ abstract class MutexLocker
     public function del($id)
     {
         return $this->redis()->del($this->getCacheKey($id));
+    }
+
+    protected function wait(int $ms): void
+    {
+        if ($ms > 0) {
+            usleep($ms * 1000);
+        }
     }
 }
