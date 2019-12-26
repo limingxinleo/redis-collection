@@ -26,7 +26,6 @@ class DemoSet2Collection extends SetCollection
     {
         $this->redis = new \Redis();
         $this->redis->connect('127.0.0.1');
-        $this->redis->auth('910123');
     }
 
     public function reload($parentId): array

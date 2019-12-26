@@ -1,0 +1,55 @@
+<?php
+
+declare(strict_types=1);
+/**
+ * This file is part of Hyperf.
+ *
+ * @link     https://www.hyperf.io
+ * @document https://doc.hyperf.io
+ * @contact  group@hyperf.io
+ * @license  https://github.com/hyperf-cloud/hyperf/blob/master/LICENSE
+ */
+
+namespace SwoftTest\Cases;
+
+use SwoftTest\Testing\DemoMutexLocker;
+use Xin\RedisCollection\Exceptions\MutexLockerException;
+
+/**
+ * @internal
+ * @coversNothing
+ */
+class MutexLockerTest extends AbstractTestCase
+{
+    protected function tearDown()
+    {
+        $locker = new DemoMutexLocker();
+        $locker->del(1);
+    }
+
+    public function testTryMutexLocker()
+    {
+        $locker = new DemoMutexLocker();
+        $uniqid = uniqid();
+        $result = $locker->try(1, function () use ($uniqid) {
+            return $uniqid;
+        });
+
+        $this->assertSame($result, $uniqid);
+    }
+
+    public function testTryMutexLockerFailed()
+    {
+        $locker = new DemoMutexLocker();
+        $locker->redis()->set('demo:mutex:locker:1', '1', ['NX', 'EX' => 10]);
+        $uniqid = uniqid();
+
+        $this->expectException(MutexLockerException::class);
+        $this->expectExceptionMessage('Try to get MutexLocker failed 5 times.');
+
+        $locker->try(1, function () use ($uniqid) {
+            $this->assertTrue(false);
+            return $uniqid;
+        }, 5);
+    }
+}

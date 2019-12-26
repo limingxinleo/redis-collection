@@ -12,17 +12,13 @@ declare(strict_types=1);
 
 namespace SwoftTest\Testing;
 
-use Xin\RedisCollection\StringCollection;
+use Xin\RedisCollection\MutexLocker;
 
-class DemoStringCollection extends StringCollection
+class DemoMutexLocker extends MutexLocker
 {
-    /**
-     * redis key.
-     * @var string
-     */
-    protected $prefix = 'demostring:';
-
     protected $redis;
+
+    protected $prefix = 'demo:mutex:locker:';
 
     public function __construct()
     {

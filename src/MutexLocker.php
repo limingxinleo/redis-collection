@@ -18,12 +18,12 @@ abstract class MutexLocker
 {
     use CacheKeyTrait;
 
-    public $prefix = '';
+    protected $prefix = '';
 
     /**
      * @var int 锁超时时间
      */
-    public $lockTime = 2;
+    protected $lockTime = 2;
 
     /**
      * 返回Redis实例.
@@ -46,14 +46,18 @@ abstract class MutexLocker
 
         try {
             $runFirst = true;
+            $tryCount = 0;
+
             beginning:
+            $tryCount++;
             if ($this->redis()->set($key, '1', ['NX', 'EX' => $this->lockTime]) !== true) {
-                if (--$times > 0) {
+                if ($tryCount < $times) {
                     $runFirst = false;
+                    usleep($ms * 1000);
                     goto beginning;
                 }
 
-                throw new MutexLockerException('Try to get MutexLocker failed.');
+                throw new MutexLockerException(sprintf('Try to get MutexLocker failed %s times.', $tryCount));
             }
 
             if ($runFirst || $runAgain) {
@@ -64,5 +68,14 @@ abstract class MutexLocker
         }
 
         return $result;
+    }
+
+    /**
+     * 主动删除锁
+     * @param int|string $id
+     */
+    public function del($id)
+    {
+        return $this->redis()->del($this->getCacheKey($id));
     }
 }
