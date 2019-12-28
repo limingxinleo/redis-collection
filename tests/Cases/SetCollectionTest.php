@@ -27,6 +27,8 @@ class SetCollectionTest extends AbstractTestCase
     {
         $collection = new DemoSetCollection();
         $collection->redis()->del('demoset:1');
+        $collection = new DemoSet2Collection();
+        $collection->redis()->del('demoset2:1');
 
         parent::tearDown();
     }
@@ -70,6 +72,15 @@ class SetCollectionTest extends AbstractTestCase
         $collection->rem($this->pid, 1);
         $count = $collection->count($this->pid);
         $this->assertEquals(3, $count);
+    }
+
+    public function testCountWithExist()
+    {
+        $collection = new DemoSet2Collection();
+        $count = $collection->count($this->pid);
+        $this->assertSame(0, $count);
+        $collection->add($this->pid, 10);
+        $this->assertSame(1, $collection->count($this->pid));
     }
 
     public function testAll()

@@ -106,7 +106,12 @@ abstract class SetCollection
         $key = $this->getCacheKey($parentId);
         $res = $this->redis()->sMembers($key);
         if (empty($res)) {
-            return $this->initialize($parentId);
+            // 如果默认 SET 一定存在，则不需要进行初始化
+            if (! $this->exist) {
+                return $this->initialize($parentId);
+            }
+
+            return [];
         }
 
         $key = array_search(static::DEFAULT_ID, $res);
@@ -188,6 +193,10 @@ abstract class SetCollection
         $key = $this->getCacheKey($parentId);
 
         $count = $this->redis()->sCard($key);
+        if ($this->exist) {
+            return $count;
+        }
+
         if ($count == 0) {
             $list = $this->initialize($parentId);
             $count = count($list);
