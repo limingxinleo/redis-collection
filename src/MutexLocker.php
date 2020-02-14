@@ -43,27 +43,27 @@ abstract class MutexLocker
     {
         $result = null;
 
-        try {
-            $runFirst = true;
-            $tryCount = 0;
+        $runFirst = true;
+        $tryCount = 0;
 
-            beginning:
-            $tryCount++;
-            if ($this->redis()->set($this->getCacheKey($id), '1', ['NX', 'PX' => $this->lockTime * 1000]) !== true) {
-                if ($tryCount < $times) {
-                    $runFirst = false;
-                    $this->wait($ms);
-                    goto beginning;
-                }
-
-                throw new MutexLockerException(sprintf('Try to get MutexLocker failed %s times.', $tryCount));
+        beginning:
+        $tryCount++;
+        if ($this->redis()->set($this->getCacheKey($id), '1', ['NX', 'PX' => $this->lockTime * 1000]) !== true) {
+            if ($tryCount < $times) {
+                $runFirst = false;
+                $this->wait($ms);
+                goto beginning;
             }
 
-            if ($runFirst || $runAgain) {
+            throw new MutexLockerException(sprintf('Try to get MutexLocker failed %s times.', $tryCount));
+        }
+
+        if ($runFirst || $runAgain) {
+            try {
                 $result = $closure();
+            } finally {
+                $this->del($id);
             }
-        } finally {
-            $this->del($id);
         }
 
         return $result;

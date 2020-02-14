@@ -68,6 +68,27 @@ class MutexLockerTest extends AbstractTestCase
         $this->assertSame(1, $locker->id);
     }
 
+    public function testTryMutexLockerFailedAgain()
+    {
+        $locker = new DemoMutexLocker();
+        $locker->redis()->set('demo:mutex:locker:1', '1', ['NX', 'PX' => 50]);
+        $uniqid = uniqid();
+
+        try {
+            $locker->try(1, function () use ($uniqid) {
+                return $uniqid;
+            }, 2, 10);
+        } catch (\Throwable $exception) {
+        }
+
+        $this->expectException(MutexLockerException::class);
+        $this->expectExceptionMessage('Try to get MutexLocker failed 2 times.');
+
+        $locker->try(1, function () use ($uniqid) {
+            return $uniqid;
+        }, 2, 10);
+    }
+
     public function testTryMutexLockerDelFailed()
     {
         $locker = new DemoMutexLockerDelFailed();
