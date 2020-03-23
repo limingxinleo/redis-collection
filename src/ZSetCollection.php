@@ -165,12 +165,14 @@ abstract class ZSetCollection
 
     /**
      * 获取元素分值
-     * @param $parentId
-     * @param $value
+     * @param int|string $parentId
+     * @param string $value
+     * @param bool $initialize 值为 false 时，则不需要判断是否存在，不存在则重建缓存。(减少一次 Redis 指令，默认 key 一定存在)
+     * @return bool|float KEY不存在 或 元素不存在 时返回 false
      */
-    public function score($parentId, $value)
+    public function score($parentId, $value, bool $initialize = true)
     {
-        if (! $this->exist($parentId)) {
+        if ($initialize && ! $this->exist($parentId)) {
             $this->initialize($parentId);
         }
 

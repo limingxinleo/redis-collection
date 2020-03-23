@@ -115,4 +115,25 @@ class ZSetCollectionTest extends AbstractTestCase
 
         $this->assertEquals(0, $count);
     }
+
+    public function testZSetOnlyScore()
+    {
+        $collection = new DemoCollection();
+        $collection->delete($this->pid);
+
+        $res = $collection->score($this->pid, 'a');
+        $this->assertFalse($res);
+
+        $collection->delete($this->pid);
+        $res = $collection->score($this->pid, 'a', false);
+        $this->assertFalse($res);
+
+        $collection->add($this->pid, 1, 'b');
+        $res = $collection->score($this->pid, 'a', false);
+        $this->assertFalse($res);
+
+        $collection->add($this->pid, 1, 'a');
+        $res = $collection->score($this->pid, 'a', false);
+        $this->assertSame(1.0, $res);
+    }
 }
