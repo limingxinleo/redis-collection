@@ -5,9 +5,9 @@ declare(strict_types=1);
  * This file is part of Hyperf.
  *
  * @link     https://www.hyperf.io
- * @document https://doc.hyperf.io
+ * @document https://hyperf.wiki
  * @contact  group@hyperf.io
- * @license  https://github.com/hyperf-cloud/hyperf/blob/master/LICENSE
+ * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 namespace Xin\RedisCollection;
 
@@ -51,13 +51,10 @@ abstract class HyperLogLogCounter
         $this->redis()->pfAdd($key, $sets);
     }
 
-    public function add($parentId, array $ids, float $ttl = null)
+    public function add($parentId, array $ids)
     {
         if (! $this->check($parentId)) {
             $this->initialize($parentId);
-        }
-
-        if ($ttl > 0) {
         }
 
         $key = $this->getCacheKey($parentId);
