@@ -9,7 +9,6 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf-cloud/hyperf/blob/master/LICENSE
  */
-
 namespace Xin\RedisCollection;
 
 abstract class HyperLogLogCounter
@@ -52,10 +51,13 @@ abstract class HyperLogLogCounter
         $this->redis()->pfAdd($key, $sets);
     }
 
-    public function add($parentId, array $ids)
+    public function add($parentId, array $ids, float $ttl = null)
     {
         if (! $this->check($parentId)) {
             $this->initialize($parentId);
+        }
+
+        if ($ttl > 0) {
         }
 
         $key = $this->getCacheKey($parentId);
