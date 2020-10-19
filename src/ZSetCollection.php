@@ -120,6 +120,10 @@ abstract class ZSetCollection
         }
 
         if (empty($res)) {
+            if ($this->exist) {
+                // 如果默认一定存在，则直接返回数据
+                return [];
+            }
             return $this->initialize($parentId);
         }
 
@@ -222,8 +226,10 @@ abstract class ZSetCollection
 
         $count = $this->redis()->zCard($key);
         if ($count == 0) {
-            $list = $this->initialize($parentId);
-            $count = count($list);
+            if (! $this->exist) {
+                $list = $this->initialize($parentId);
+                $count = count($list);
+            }
         } else {
             --$count;
         }

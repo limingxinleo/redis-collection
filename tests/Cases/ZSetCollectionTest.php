@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace SwoftTest\Cases;
 
 use SwoftTest\Testing\DemoCollection;
+use SwoftTest\Testing\DemoZSetCollection;
 
 /**
  * @internal
@@ -134,5 +135,16 @@ class ZSetCollectionTest extends AbstractTestCase
         $collection->add($this->pid, 1, 'a');
         $res = $collection->score($this->pid, 'a', false);
         $this->assertSame(1.0, $res);
+    }
+
+    public function testExistZSetAll()
+    {
+        $col = new DemoZSetCollection(false);
+        $this->assertSame(2, $col->count(1));
+        $this->assertEquals(['a' => 1, 'b' => 2], $col->all(1));
+
+        $col = new DemoZSetCollection(true);
+        $this->assertSame(0, $col->count(2));
+        $this->assertEquals([], $col->all(2));
     }
 }
