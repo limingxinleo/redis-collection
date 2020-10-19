@@ -231,7 +231,9 @@ abstract class ZSetCollection
                 $count = count($list);
             }
         } else {
-            --$count;
+            if (! $this->exist) {
+                --$count;
+            }
         }
 
         return $count;

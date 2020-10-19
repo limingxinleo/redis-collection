@@ -144,7 +144,12 @@ class ZSetCollectionTest extends AbstractTestCase
         $this->assertEquals(['a' => 1, 'b' => 2], $col->all(1));
 
         $col = new DemoZSetCollection(true);
+        $col->delete(2);
         $this->assertSame(0, $col->count(2));
         $this->assertEquals([], $col->all(2));
+
+        $col->add(2, time(), 'a');
+        $this->assertSame(1, $col->count(2));
+        $this->assertEquals(['a' => time()], $col->all(2));
     }
 }
