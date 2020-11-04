@@ -243,4 +243,49 @@ abstract class ZSetCollection
     {
         return $this->ttl;
     }
+
+    /**
+     * 批量获取 成员的分数.
+     * @param $parentId
+     * @throws Exceptions\CollectionException
+     * @return array
+     */
+    public function zscores($parentId, array $members)
+    {
+        array_unshift($members, $this->getCacheKey($parentId));
+        $data = $this->redis()->eval($this->getZscoresScript(), $members, 1);
+        array_shift($members);
+        return $this->parseResponse($members, $data);
+    }
+
+    /**
+     * 获取成员分数的脚本.
+     */
+    protected function getZscoresScript(): string
+    {
+        return <<<'LUA'
+    local values = {};
+    for i,v in ipairs(ARGV) do 
+        values[i] = redis.call('zscore',KEYS[1],v);
+    end
+    return values;
+LUA;
+    }
+
+    /**
+     * 格式化成员函数的分值的结果，不存在的成员不返回.
+     * @param $inputs
+     * @param $result
+     * @return array
+     */
+    protected function parseResponse($inputs, $result)
+    {
+        $return = [];
+        foreach ($inputs as $i => $input) {
+            if ($value = $result[$i] ?? false and $value !== false) {
+                $return[$input] = $value;
+            }
+        }
+        return $return;
+    }
 }
