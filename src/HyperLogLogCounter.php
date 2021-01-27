@@ -55,7 +55,7 @@ abstract class HyperLogLogCounter
         $sets = $this->reload($parentId);
         $key = $this->getCacheKey($parentId);
         $this->redis()->pfAdd($key, $sets);
-        if (is_int($this->ttl) and $this->ttl > 0) {
+        if (is_int($this->ttl) && $this->ttl > 0) {
             $this->redis()->expire($key, $this->ttl);
         }
     }
