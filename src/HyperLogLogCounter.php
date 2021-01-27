@@ -28,6 +28,12 @@ abstract class HyperLogLogCounter
     protected $exist = false;
 
     /**
+     * 超时时间.
+     * @var int
+     */
+    protected $ttl = 0;
+
+    /**
      * 从DB中读取对应的全部列表.
      * @param $parentId
      * @return array
@@ -49,6 +55,9 @@ abstract class HyperLogLogCounter
         $sets = $this->reload($parentId);
         $key = $this->getCacheKey($parentId);
         $this->redis()->pfAdd($key, $sets);
+        if ($ttl = $this->ttl and $ttl >= 0) {
+            $this->redis()->expire($key, $ttl);
+        }
     }
 
     public function add($parentId, array $ids)
@@ -75,6 +84,21 @@ abstract class HyperLogLogCounter
     {
         $key = $this->getCacheKey($parentId);
         return $this->redis()->del($key);
+    }
+
+    /**
+     * @param $parentId
+     * @throws Exceptions\CollectionException
+     * @return bool|int
+     */
+    public function ttl($parentId)
+    {
+        return $this->redis()->ttl($this->getCacheKey($parentId));
+    }
+
+    public function exist($id): bool
+    {
+        return (bool) $this->redis()->exists($this->getCacheKey($id));
     }
 
     /**
