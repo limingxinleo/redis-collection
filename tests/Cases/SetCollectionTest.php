@@ -22,7 +22,7 @@ class SetCollectionTest extends AbstractTestCase
 {
     protected $pid = 1;
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $collection = new DemoSetCollection();
         $collection->redis()->del('demoset:1');
