@@ -72,17 +72,9 @@ class HyperLogLogCounterTest extends AbstractTestCase
         $time = 2;
         $counter = new DemoHyperLogLog2Counter();
         $counter->clear($key);
-
         $counter->setExist(false);
         $counter->setTtl($time);
-
-        $this->assertSame($counter->count($key), 2);
-
         $counter->add($key, ['bv4', 'bv3']);
-        $this->assertSame(4, $counter->count($key));
-
-        sleep($time);
-
-        $this->assertSame(false, $counter->exist($key));
+        $this->assertSame($time, $counter->ttl($key));
     }
 }
