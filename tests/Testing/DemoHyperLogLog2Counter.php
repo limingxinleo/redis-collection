@@ -38,4 +38,14 @@ class DemoHyperLogLog2Counter extends HyperLogLogCounter
     {
         return $this->redis;
     }
+
+    public function setTtl(int $time)
+    {
+        $this->ttl = $time;
+    }
+
+    public function setExist(bool $value)
+    {
+        $this->exist = $value;
+    }
 }
