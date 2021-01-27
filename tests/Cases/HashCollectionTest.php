@@ -23,7 +23,7 @@ class HashCollectionTest extends AbstractTestCase
 {
     protected $pid = 1;
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $collection = new DemoHashCollection();
         $collection->delete($this->pid);

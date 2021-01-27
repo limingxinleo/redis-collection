@@ -21,7 +21,7 @@ use Xin\RedisCollection\Exceptions\MutexLockerException;
  */
 class MutexLockerTest extends AbstractTestCase
 {
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $locker = new DemoMutexLocker();
         $locker->del(1);
