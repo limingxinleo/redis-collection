@@ -70,9 +70,14 @@ class HashCollectionTest extends AbstractTestCase
         ], $collection->get($this->pid));
     }
 
-    public function testMSet()
+    public function testMSetAndMGet()
     {
         $collection = new DemoHashCollection();
+        $collection->redis()->del('demohash:1');
+
+        $data = $collection->mget($this->pid, ['id', 'age']);
+        $this->assertSame(['id' => 1, 'age' => null], $data);
+
         $collection->redis()->del('demohash:1');
         $collection->mset($this->pid, ['age' => 18, 'sex' => 1]);
 
@@ -90,6 +95,11 @@ class HashCollectionTest extends AbstractTestCase
             'age' => 18,
             'sex' => 1,
         ], $collection->get($this->pid));
+
+        $this->assertEquals([
+            'id' => 1,
+            'age' => 18,
+        ], $collection->mget($this->pid, ['id', 'age']));
     }
 
     public function testGet()

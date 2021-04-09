@@ -156,6 +156,27 @@ abstract class HashCollection
     }
 
     /**
+     * @param mixed $parentId
+     * @param array $hashKeys
+     * @throws Exceptions\CollectionException
+     */
+    public function mget($parentId, $hashKeys): array
+    {
+        if (! $this->exist($parentId)) {
+            $hash = $this->initialize($parentId);
+        } else {
+            $hash = $this->redis()->hMGet($this->getCacheKey($parentId), $hashKeys);
+        }
+
+        $result = [];
+        foreach ($hashKeys as $key) {
+            $result[$key] = $hash[$key] ?? null;
+        }
+
+        return $result;
+    }
+
+    /**
      * 查询单个值
      * @param $parentId
      * @param $hashKey
