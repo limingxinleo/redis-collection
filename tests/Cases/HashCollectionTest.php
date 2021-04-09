@@ -33,7 +33,10 @@ class HashCollectionTest extends AbstractTestCase
     {
         $collection = new DemoHashCollection();
         $collection->redis()->del('demohash:1');
-        $collection->set($this->pid, 'age', 18);
+        $ret = $collection->set($this->pid, 'age', 10);
+        $this->assertSame(1, $ret);
+        $ret = $collection->set($this->pid, 'age', 18);
+        $this->assertSame(0, $ret);
 
         $this->assertTrue($collection->redis()->exists('demohash:1') > 0);
         $this->assertEquals([
@@ -47,6 +50,11 @@ class HashCollectionTest extends AbstractTestCase
             'name' => 'limx',
             'age' => 18,
         ], $collection->get($this->pid));
+
+        $collection->redis()->del('demohash:1');
+        $collection->redis()->set('demohash:1', 'xxx');
+        $ret = $collection->set($this->pid, 'age', 10);
+        $this->assertFalse($ret);
     }
 
     public function testSetNotString()

@@ -103,12 +103,10 @@ abstract class HashCollection
 
     /**
      * 将元素插入到列表.
-     * @param $parentId
-     * @param $score
-     * @param $value
+     * @param mixed $parentId
      * @param string $hkey
      * @param string $hvalue
-     * @return int
+     * @return false|int
      */
     public function set($parentId, $hkey, $hvalue)
     {
