@@ -15,9 +15,9 @@ abstract class HashCollection
 {
     use CacheKeyTrait;
 
-    const DEFAULT_KEY = 'swoft:none';
+    public const DEFAULT_KEY = 'swoft:none';
 
-    const DEFAULT_VALUE = 'none';
+    public const DEFAULT_VALUE = 'none';
 
     /**
      * redis key.

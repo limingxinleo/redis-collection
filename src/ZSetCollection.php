@@ -15,11 +15,11 @@ abstract class ZSetCollection
 {
     use CacheKeyTrait;
 
-    const DEFAULT_ID = 0;
+    public const DEFAULT_ID = 0;
 
-    const SORT_DESC = 'desc';
+    public const SORT_DESC = 'desc';
 
-    const SORT_ASC = 'asc';
+    public const SORT_ASC = 'asc';
 
     /**
      * redis key.

@@ -15,7 +15,7 @@ abstract class SetCollection
 {
     use CacheKeyTrait;
 
-    const DEFAULT_ID = '0';
+    public const DEFAULT_ID = '0';
 
     /**
      * redis key.
