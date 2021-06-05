@@ -38,6 +38,20 @@ class MutexLockerTest extends AbstractTestCase
         $this->assertSame($result, $uniqid);
     }
 
+    public function testLockMutexLocker()
+    {
+        $locker = new DemoMutexLocker();
+        $id = uniqid();
+        $result = $locker->lock($id, '1', 1);
+        $this->assertTrue($result);
+        $result = $locker->lock($id, '1', 1);
+        $this->assertFalse($result);
+        $locker->del($id);
+        $result = $locker->lock($id, '1', 1);
+        $this->assertTrue($result);
+        $locker->del($id);
+    }
+
     public function testTryMutexLockerFailed()
     {
         $locker = new DemoMutexLocker();

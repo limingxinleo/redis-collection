@@ -69,6 +69,28 @@ abstract class MutexLocker
     }
 
     /**
+     * @param mixed $id
+     * @param null|float $ttl 秒
+     */
+    public function lock($id, string $value = '1', float $ttl = null): bool
+    {
+        if ($ttl === null) {
+            $ttl = $this->lockTime;
+        }
+        $ttl = $ttl * 1000;
+        if ($this->redis()->set($this->getCacheKey($id), $value, ['NX', 'PX' => (string) $ttl]) === true) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function get(string $id)
+    {
+        return $this->redis()->get($this->getCacheKey($id));
+    }
+
+    /**
      * 主动删除锁
      * @param int|string $id
      */
