@@ -49,25 +49,38 @@ abstract class HyperLogLogCounter
     /**
      * Redis数据初始化.
      * @param $parentId
+     * @return bool 是否初始化成功
      */
     public function initialize($parentId)
     {
         $sets = $this->reload($parentId);
         $key = $this->getCacheKey($parentId);
-        $this->redis()->pfAdd($key, $sets);
-        if (is_int($this->ttl) && $this->ttl > 0) {
+        $result = $this->redis()->pfAdd($key, $sets);
+        if ($result && is_int($this->ttl) && $this->ttl > 0) {
             $this->redis()->expire($key, $this->ttl);
         }
+
+        return (bool) $result;
     }
 
+    /**
+     * @param mixed $parentId
+     * @return false|int
+     */
     public function add($parentId, array $ids)
     {
+        $exists = true;
         if (! $this->check($parentId)) {
-            $this->initialize($parentId);
+            $exists = $this->initialize($parentId);
         }
 
         $key = $this->getCacheKey($parentId);
-        return $this->redis()->pfAdd($key, $ids);
+        $result = $this->redis()->pfAdd($key, $ids);
+        if (! $exists && $result && is_int($this->ttl) && $this->ttl > 0) {
+            $this->redis()->expire($key, $this->ttl);
+        }
+
+        return $result;
     }
 
     public function count($parentId)

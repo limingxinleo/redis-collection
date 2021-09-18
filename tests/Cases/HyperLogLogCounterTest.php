@@ -13,6 +13,7 @@ namespace SwoftTest\Cases;
 
 use SwoftTest\Testing\DemoHyperLogLog2Counter;
 use SwoftTest\Testing\DemoHyperLogLogCounter;
+use SwoftTest\Testing\EmptyHyperLogLogCounter;
 
 /**
  * @internal
@@ -32,6 +33,11 @@ class HyperLogLogCounterTest extends AbstractTestCase
 
         $bool = $counter->add(1, ['bv1']);
         $this->assertSame(0, $bool);
+
+        $counter = new EmptyHyperLogLogCounter();
+        $counter->clear(1);
+        $this->assertSame(1, $counter->add(1, [1]));
+        $this->assertSame(60, $counter->ttl(1));
     }
 
     public function testExist()
