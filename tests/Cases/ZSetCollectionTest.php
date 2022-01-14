@@ -97,8 +97,14 @@ class ZSetCollectionTest extends AbstractTestCase
         $this->assertEquals(5, $count);
         $this->assertEquals([5 => 4, 4 => 3], $item);
 
+        $item = $collection->revRange($this->pid, 0, 2);
+        $this->assertEquals([5 => 4, 4 => 3], $item);
+
         [$count, $item] = $collection->pagination($this->pid, 2, 2);
         $this->assertEquals(5, $count);
+        $this->assertEquals([3 => 2, 2 => 1], $item);
+
+        $item = $collection->revRange($this->pid, 2, 2);
         $this->assertEquals([3 => 2, 2 => 1], $item);
     }
 

@@ -217,6 +217,22 @@ abstract class ZSetCollection
     }
 
     /**
+     * @param string $parentId
+     * @param int $offset
+     * @param int $limit
+     * @return array<string, float> [$id => $score]
+     */
+    public function revRange($parentId, $offset = 0, $limit = 10)
+    {
+        $key = $this->getCacheKey($parentId);
+
+        $end = $offset + $limit - 1;
+        $items = $this->redis()->zRevRange($key, (int) $offset, (int) $end, true);
+        unset($items[static::DEFAULT_ID]);
+        return $items;
+    }
+
+    /**
      * 返回有序集合总数.
      * @param $parentId
      */
