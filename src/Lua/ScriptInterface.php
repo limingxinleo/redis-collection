@@ -21,5 +21,5 @@ interface ScriptInterface
 
     public function getKeyNumber(): int;
 
-    public function formatOutput(mixed $output): mixed;
+    public function formatOutput($output);
 }

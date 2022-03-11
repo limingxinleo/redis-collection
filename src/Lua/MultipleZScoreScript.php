@@ -57,7 +57,11 @@ LUA;
         return 1;
     }
 
-    public function formatOutput(mixed $output): mixed
+    /**
+     * @param mixed $output
+     * @return mixed
+     */
+    public function formatOutput($output)
     {
         $return = [];
         foreach ($this->members as $i => $input) {
