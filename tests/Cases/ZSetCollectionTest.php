@@ -22,6 +22,13 @@ class ZSetCollectionTest extends AbstractTestCase
 {
     protected $pid = 1;
 
+    protected function tearDown(): void
+    {
+        $redis = new \Redis();
+        $redis->connect('127.0.0.1');
+        $redis->del('demo:1');
+    }
+
     public function testAdd()
     {
         $collection = new DemoCollection();
@@ -157,5 +164,18 @@ class ZSetCollectionTest extends AbstractTestCase
         $col->add(2, time(), 'a');
         $this->assertSame(1, $col->count(2));
         $this->assertEquals(['a' => time()], $col->all(2));
+    }
+
+    public function testMultipleZScore()
+    {
+        $collection = new DemoCollection();
+        $collection->add($this->pid, 2, 3);
+
+        $res = $collection->multipleZScore($this->pid, [2, 3]);
+        $this->assertEquals([2 => '1', 3 => '2'], $res);
+
+        $collection->delete($this->pid);
+        $res = $collection->multipleZScore($this->pid, [2, 3]);
+        $this->assertEquals([2 => '1'], $res);
     }
 }

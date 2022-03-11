@@ -11,6 +11,9 @@ declare(strict_types=1);
  */
 namespace Xin\RedisCollection;
 
+use Xin\RedisCollection\Lua\HasLuaScript;
+use Xin\RedisCollection\Lua\MultipleZScoreScript;
+
 abstract class ZSetCollection
 {
     use CacheKeyTrait;
