@@ -14,6 +14,7 @@ namespace Xin\RedisCollection;
 abstract class ZSetCollection
 {
     use CacheKeyTrait;
+    use HasLuaScript;
 
     public const DEFAULT_ID = 0;
 
@@ -262,6 +263,7 @@ abstract class ZSetCollection
 
     /**
      * 批量获取 成员的分数.
+     * @deprecated
      * @param $parentId
      * @throws Exceptions\CollectionException
      * @return array
@@ -272,6 +274,22 @@ abstract class ZSetCollection
         $data = $this->redis()->eval($this->getZscoresScript(), $members, 1);
         array_shift($members);
         return $this->parseResponse($members, $data);
+    }
+
+    /**
+     * 批量获取 成员的分数.
+     * @param int|string|\Stringable $parentId
+     * @throws Exceptions\CollectionException
+     * @return array
+     */
+    public function multipleZScore($parentId, array $members, bool $initialize = true)
+    {
+        if ($initialize && ! $this->exist($parentId)) {
+            $this->initialize($parentId);
+        }
+
+        $script = new MultipleZScoreScript($this->getCacheKey($parentId), $members);
+        return $this->runScript($script);
     }
 
     /**

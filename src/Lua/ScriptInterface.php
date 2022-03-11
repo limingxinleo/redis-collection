@@ -16,4 +16,10 @@ interface ScriptInterface
     public function getScript(): string;
 
     public function getName(): string;
+
+    public function getArgs(): array;
+
+    public function getKeyNumber(): int;
+
+    public function formatOutput(mixed $output): mixed;
 }

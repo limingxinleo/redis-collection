@@ -23,24 +23,25 @@ trait HasLuaScript
      */
     protected $loadScript = true;
 
-    public function runScript(ScriptInterface $script, array $keys, ?int $num = null)
+    public function runScript(ScriptInterface $script)
     {
-        if ($num === null) {
-            $num = count($keys);
-        }
-
-        /** @var \Redis $redis */
         $redis = $this->redis();
 
         if ($this->loadScript) {
             if ($sha = $this->shaList[$script->getName()] ?? null) {
-                return $redis->evalSha($sha, $keys, $num);
+                return $script->formatOutput(
+                    $redis->evalSha($sha, $script->getArgs(), $script->getKeyNumber())
+                );
             }
 
             $this->shaList[$script->getName()] = $sha = $redis->script('load', $script->getScript());
-            return $redis->evalSha($sha, $keys, $num);
+            return $script->formatOutput(
+                $redis->evalSha($sha, $script->getArgs(), $script->getKeyNumber())
+            );
         }
 
-        return $redis->eval($script->getScript(), $keys, $num);
+        return $script->formatOutput(
+            $redis->eval($script->getScript(), $script->getArgs(), $script->getKeyNumber())
+        );
     }
 }
