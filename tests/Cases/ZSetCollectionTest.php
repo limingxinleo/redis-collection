@@ -174,6 +174,9 @@ class ZSetCollectionTest extends AbstractTestCase
         $res = $collection->multipleZScore($this->pid, [2, 3]);
         $this->assertEquals([2 => '1', 3 => '2'], $res);
 
+        $res = $collection->multipleZScore($this->pid, [2, 2 => 3]);
+        $this->assertEquals([2 => '1', 3 => '2'], $res);
+
         $collection->delete($this->pid);
         $res = $collection->multipleZScore($this->pid, [2, 3]);
         $this->assertEquals([2 => '1'], $res);
