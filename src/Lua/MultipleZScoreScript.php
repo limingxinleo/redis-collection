@@ -26,7 +26,7 @@ class MultipleZScoreScript implements ScriptInterface
     public function __construct(string $key, array $members = [])
     {
         $this->key = $key;
-        $this->members = $members;
+        $this->members = array_values($members);
     }
 
     public function getScript(): string
