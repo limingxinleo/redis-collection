@@ -37,7 +37,8 @@ class ZSetCollectionTest extends AbstractTestCase
         $this->assertTrue($collection->redis()->exists('demo:1') > 0);
         $this->assertTrue($collection->redis()->zScore('demo:1', 3) == 2);
 
-        $collection->incr($this->pid, 1, 3);
+        $res = $collection->incr($this->pid, 1, 3);
+        $this->assertSame(3.0, $res);
         $this->assertTrue($collection->redis()->zScore('demo:1', 3) == 3);
         $this->assertEquals(3, $collection->score($this->pid, 3));
     }

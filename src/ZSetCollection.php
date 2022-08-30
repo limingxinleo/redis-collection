@@ -157,7 +157,7 @@ abstract class ZSetCollection
      * @param $parentId
      * @param $score
      * @param $value
-     * @return int
+     * @return float
      */
     public function incr($parentId, $score, $value)
     {
