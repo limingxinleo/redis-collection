@@ -11,6 +11,7 @@ declare(strict_types=1);
  */
 namespace SwoftTest\Testing;
 
+use Redis;
 use Xin\RedisCollection\HashCollection;
 
 class DemoHashCollection3 extends HashCollection
@@ -25,7 +26,7 @@ class DemoHashCollection3 extends HashCollection
 
     public function __construct()
     {
-        $this->redis = new \Redis();
+        $this->redis = new Redis();
         $this->redis->connect('127.0.0.1');
     }
 

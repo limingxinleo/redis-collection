@@ -11,6 +11,8 @@ declare(strict_types=1);
  */
 namespace Xin\RedisCollection;
 
+use Redis;
+
 abstract class HashCollection
 {
     use CacheKeyTrait;
@@ -38,20 +40,20 @@ abstract class HashCollection
 
     /**
      * 从DB中读取对应的全部列表.
-     * @param $parentId
+     * @param mixed $parentId
      * @return array
      */
     abstract public function reload($parentId);
 
     /**
      * 返回Redis实例.
-     * @return \Redis
+     * @return Redis
      */
     abstract public function redis();
 
     /**
      * Redis数据初始化.
-     * @param $parentId
+     * @param mixed $parentId
      */
     public function initialize($parentId)
     {
@@ -74,7 +76,7 @@ abstract class HashCollection
 
     /**
      * 当前列表是否存在.
-     * @param $parentId
+     * @param mixed $parentId
      * @return mixed
      */
     public function exist($parentId)
@@ -86,7 +88,7 @@ abstract class HashCollection
 
     /**
      * 查询所有数据.
-     * @param $parentId
+     * @param mixed $parentId
      * @return array
      */
     public function get($parentId)
@@ -121,9 +123,9 @@ abstract class HashCollection
 
     /**
      * 累加、累减.
-     * @param $parentId
      * @param string $hkey
      * @param float $hvalue
+     * @param mixed $parentId
      */
     public function incr($parentId, $hkey, $hvalue)
     {
@@ -138,10 +140,10 @@ abstract class HashCollection
 
     /**
      * 将多个元素插入到列表.
-     * @param $parentId
      * @param $score
      * @param $value
      * @param mixed $hashKeys
+     * @param mixed $parentId
      * @return int
      */
     public function mset($parentId, $hashKeys)
@@ -178,10 +180,10 @@ abstract class HashCollection
 
     /**
      * 查询单个值
-     * @param $parentId
-     * @param $hashKey
-     * @throws Exceptions\CollectionException
+     * @param mixed $parentId
+     * @param mixed $hashKey
      * @return string
+     * @throws Exceptions\CollectionException
      */
     public function hget($parentId, $hashKey)
     {
@@ -196,11 +198,11 @@ abstract class HashCollection
 
     /**
      * 删除key.
-     * @param $parentId
-     * @param $hashKey1
      * @param mixed ...$hashKey
-     * @throws Exceptions\CollectionException
+     * @param mixed $parentId
+     * @param mixed $hashKey1
      * @return false|int
+     * @throws Exceptions\CollectionException
      */
     public function hdel($parentId, $hashKey1, ...$hashKey)
     {
@@ -210,8 +212,8 @@ abstract class HashCollection
 
     /**
      * 删除hash.
-     * @param $parentId
      * @param $value
+     * @param mixed $parentId
      * @return int
      */
     public function delete($parentId)
@@ -223,7 +225,7 @@ abstract class HashCollection
 
     /**
      * 超时时间.
-     * @param $parentId
+     * @param mixed $parentId
      * @return int
      */
     public function ttl($parentId)

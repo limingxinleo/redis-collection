@@ -11,6 +11,7 @@ declare(strict_types=1);
  */
 namespace SwoftTest\Testing;
 
+use Redis;
 use Xin\RedisCollection\HyperLogLogCounter;
 
 class EmptyHyperLogLogCounter extends HyperLogLogCounter
@@ -23,7 +24,7 @@ class EmptyHyperLogLogCounter extends HyperLogLogCounter
 
     public function __construct()
     {
-        $this->redis = new \Redis();
+        $this->redis = new Redis();
         $this->redis->connect('127.0.0.1');
     }
 

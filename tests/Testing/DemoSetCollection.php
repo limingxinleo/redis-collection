@@ -11,6 +11,7 @@ declare(strict_types=1);
  */
 namespace SwoftTest\Testing;
 
+use Redis;
 use Xin\RedisCollection\SetCollection;
 
 class DemoSetCollection extends SetCollection
@@ -23,7 +24,7 @@ class DemoSetCollection extends SetCollection
 
     public function __construct()
     {
-        $this->redis = new \Redis();
+        $this->redis = new Redis();
         $this->redis->connect('127.0.0.1');
     }
 

@@ -11,6 +11,8 @@ declare(strict_types=1);
  */
 namespace Xin\RedisCollection;
 
+use Redis;
+
 abstract class HyperLogLogCounter
 {
     use CacheKeyTrait;
@@ -35,20 +37,20 @@ abstract class HyperLogLogCounter
 
     /**
      * 从DB中读取对应的全部列表.
-     * @param $parentId
+     * @param mixed $parentId
      * @return array
      */
     abstract public function reload($parentId);
 
     /**
      * 返回Redis实例.
-     * @return \Redis
+     * @return Redis
      */
     abstract public function redis();
 
     /**
      * Redis数据初始化.
-     * @param $parentId
+     * @param mixed $parentId
      * @return bool 是否初始化成功
      */
     public function initialize($parentId)
@@ -100,9 +102,9 @@ abstract class HyperLogLogCounter
     }
 
     /**
-     * @param $parentId
-     * @throws Exceptions\CollectionException
+     * @param mixed $parentId
      * @return bool|int
+     * @throws Exceptions\CollectionException
      */
     public function ttl($parentId)
     {
@@ -116,9 +118,9 @@ abstract class HyperLogLogCounter
 
     /**
      * 判断当前Counter是否存在.
-     * @param $parentId
-     * @throws Exceptions\CollectionException
+     * @param mixed $parentId
      * @return bool
+     * @throws Exceptions\CollectionException
      */
     protected function check($parentId)
     {

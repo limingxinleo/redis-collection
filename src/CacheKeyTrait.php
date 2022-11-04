@@ -15,6 +15,13 @@ use Xin\RedisCollection\Exceptions\CollectionException;
 
 trait CacheKeyTrait
 {
+    public function freshTTL($parentId, int $ttl = 86400): void
+    {
+        $key = $this->getCacheKey($parentId);
+
+        $this->redis()->expire($key, $ttl);
+    }
+
     protected function getCacheKey($parentId): string
     {
         if (empty($this->prefix)) {

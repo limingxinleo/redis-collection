@@ -11,6 +11,7 @@ declare(strict_types=1);
  */
 namespace SwoftTest\Cases;
 
+use Redis;
 use SwoftTest\Testing\DemoCollection;
 use SwoftTest\Testing\DemoZSetCollection;
 
@@ -24,7 +25,7 @@ class ZSetCollectionTest extends AbstractTestCase
 
     protected function tearDown(): void
     {
-        $redis = new \Redis();
+        $redis = new Redis();
         $redis->connect('127.0.0.1');
         $redis->del('demo:1');
     }

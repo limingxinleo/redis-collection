@@ -11,6 +11,8 @@ declare(strict_types=1);
  */
 namespace Xin\RedisCollection;
 
+use Redis;
+
 abstract class SetCollection
 {
     use CacheKeyTrait;
@@ -37,19 +39,19 @@ abstract class SetCollection
 
     /**
      * 从DB中读取对应的全部列表.
-     * @param $parentId
+     * @param mixed $parentId
      */
     abstract public function reload($parentId): array;
 
     /**
      * 返回Redis实例.
-     * @return \Redis
+     * @return Redis
      */
     abstract public function redis();
 
     /**
      * Redis数据初始化.
-     * @param $parentId
+     * @param mixed $parentId
      */
     public function initialize($parentId)
     {
@@ -69,7 +71,7 @@ abstract class SetCollection
 
     /**
      * 当前列表是否存在.
-     * @param $parentId
+     * @param mixed $parentId
      * @return mixed
      */
     public function exist($parentId)
@@ -85,7 +87,7 @@ abstract class SetCollection
 
     /**
      * 删除缓存.
-     * @param $parentId
+     * @param mixed $parentId
      * @return bool
      */
     public function delete($parentId)
@@ -97,7 +99,7 @@ abstract class SetCollection
 
     /**
      * 查询所有数据.
-     * @param $parentId
+     * @param mixed $parentId
      * @return array
      */
     public function all($parentId)
@@ -135,8 +137,8 @@ abstract class SetCollection
 
     /**
      * 将元素插入到列表.
-     * @param $parentId
-     * @param $value
+     * @param mixed $parentId
+     * @param mixed $value
      * @return int
      */
     public function add($parentId, $value)
@@ -155,8 +157,8 @@ abstract class SetCollection
 
     /**
      * 获取元素分值
-     * @param $parentId
-     * @param $value
+     * @param mixed $parentId
+     * @param mixed $value
      */
     public function isMember($parentId, $value)
     {
@@ -172,8 +174,8 @@ abstract class SetCollection
 
     /**
      * 将此元素从列表中移除.
-     * @param $parentId
-     * @param $value
+     * @param mixed $parentId
+     * @param mixed $value
      * @return int
      */
     public function rem($parentId, $value)
@@ -185,7 +187,7 @@ abstract class SetCollection
 
     /**
      * 返回有序集合总数.
-     * @param $parentId
+     * @param mixed $parentId
      */
     public function count($parentId)
     {

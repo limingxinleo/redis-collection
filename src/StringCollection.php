@@ -11,6 +11,8 @@ declare(strict_types=1);
  */
 namespace Xin\RedisCollection;
 
+use Redis;
+
 abstract class StringCollection
 {
     use CacheKeyTrait;
@@ -23,13 +25,13 @@ abstract class StringCollection
 
     /**
      * 返回Redis实例.
-     * @return \Redis
+     * @return Redis
      */
     abstract public function redis();
 
     /**
      * 是否存在.
-     * @param $id
+     * @param mixed $id
      * @return bool
      */
     public function exist($id)
@@ -41,7 +43,7 @@ abstract class StringCollection
 
     /**
      * 获取数据.
-     * @param $id
+     * @param mixed $id
      * @return bool|string
      */
     public function get($id)
@@ -53,9 +55,9 @@ abstract class StringCollection
 
     /**
      * 设置数据.
-     * @param $id
      * @param string $value 数据
      * @param int $ttl 超时时间 秒
+     * @param mixed $id
      * @return bool
      */
     public function set($id, $value, $ttl = 3600)
@@ -69,7 +71,7 @@ abstract class StringCollection
 
     /**
      * 删除数据.
-     * @param $id
+     * @param mixed $id
      */
     public function delete($id)
     {
@@ -80,7 +82,7 @@ abstract class StringCollection
 
     /**
      * 获取字符串剩余时间.
-     * @param $id
+     * @param mixed $id
      */
     public function ttl($id)
     {

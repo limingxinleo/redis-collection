@@ -11,6 +11,8 @@ declare(strict_types=1);
  */
 namespace Xin\RedisCollection;
 
+use Closure;
+use Redis;
 use Xin\RedisCollection\Exceptions\MutexLockerException;
 
 abstract class MutexLocker
@@ -26,19 +28,19 @@ abstract class MutexLocker
 
     /**
      * 返回Redis实例.
-     * @return \Redis
+     * @return Redis
      */
     abstract public function redis();
 
     /**
      * 尝试获取锁 并执行对应操作.
      * @param int|string $id 锁ID
-     * @param \Closure $closure 获取锁后需要执行的代码
+     * @param Closure $closure 获取锁后需要执行的代码
      * @param int $times 尝试获取次数 <= 1 和 1 一致
      * @param int $ms 获取失败后的等待时间 毫秒
      * @param bool $runAgain 当首次争抢锁失败后，是否执行代码
      */
-    public function try($id, \Closure $closure, int $times = 2, int $ms = 100, $runAgain = true)
+    public function try($id, Closure $closure, int $times = 2, int $ms = 100, $runAgain = true)
     {
         $result = null;
 

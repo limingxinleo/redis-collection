@@ -13,6 +13,7 @@ namespace SwoftTest\Cases;
 
 use SwoftTest\Testing\DemoMutexLocker;
 use SwoftTest\Testing\DemoMutexLockerDelFailed;
+use Throwable;
 use Xin\RedisCollection\Exceptions\MutexLockerException;
 
 /**
@@ -91,7 +92,7 @@ class MutexLockerTest extends AbstractTestCase
             $locker->try(1, function () use ($uniqid) {
                 return $uniqid;
             }, 2, 10);
-        } catch (\Throwable $exception) {
+        } catch (Throwable $exception) {
         }
 
         $this->expectException(MutexLockerException::class);

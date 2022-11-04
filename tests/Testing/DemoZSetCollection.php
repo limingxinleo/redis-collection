@@ -11,6 +11,7 @@ declare(strict_types=1);
  */
 namespace SwoftTest\Testing;
 
+use Redis;
 use Xin\RedisCollection\ZSetCollection;
 
 class DemoZSetCollection extends ZSetCollection
@@ -23,7 +24,7 @@ class DemoZSetCollection extends ZSetCollection
 
     public function __construct(bool $exist)
     {
-        $this->redis = new \Redis();
+        $this->redis = new Redis();
         $this->redis->connect('127.0.0.1');
         $this->exist = $exist;
     }

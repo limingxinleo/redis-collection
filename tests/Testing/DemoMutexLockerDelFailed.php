@@ -11,6 +11,7 @@ declare(strict_types=1);
  */
 namespace SwoftTest\Testing;
 
+use Redis;
 use Xin\RedisCollection\MutexLocker;
 
 class DemoMutexLockerDelFailed extends MutexLocker
@@ -23,7 +24,7 @@ class DemoMutexLockerDelFailed extends MutexLocker
 
     public function __construct()
     {
-        $this->redis = new \Redis();
+        $this->redis = new Redis();
         $this->redis->connect('127.0.0.1');
     }
 

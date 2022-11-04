@@ -11,6 +11,8 @@ declare(strict_types=1);
  */
 namespace Xin\RedisCollection;
 
+use Redis;
+use Stringable;
 use Xin\RedisCollection\Lua\HasLuaScript;
 use Xin\RedisCollection\Lua\MultipleZScoreScript;
 
@@ -45,20 +47,20 @@ abstract class ZSetCollection
 
     /**
      * 从DB中读取对应的全部列表.
-     * @param $parentId
+     * @param mixed $parentId
      * @return ['$id'=>'$score']
      */
     abstract public function reload($parentId);
 
     /**
      * 返回Redis实例.
-     * @return \Redis
+     * @return Redis
      */
     abstract public function redis();
 
     /**
      * Redis数据初始化.
-     * @param $parentId
+     * @param mixed $parentId
      */
     public function initialize($parentId)
     {
@@ -82,7 +84,7 @@ abstract class ZSetCollection
 
     /**
      * 当前列表是否存在.
-     * @param $parentId
+     * @param mixed $parentId
      * @return mixed
      */
     public function exist($parentId)
@@ -98,7 +100,7 @@ abstract class ZSetCollection
 
     /**
      * 删除缓存.
-     * @param $parentId
+     * @param mixed $parentId
      * @return bool
      */
     public function delete($parentId)
@@ -110,8 +112,8 @@ abstract class ZSetCollection
 
     /**
      * 查询所有数据.
-     * @param $parentId
      * @param mixed $sort
+     * @param mixed $parentId
      * @return array
      */
     public function all($parentId, $sort = self::SORT_DESC)
@@ -137,9 +139,9 @@ abstract class ZSetCollection
 
     /**
      * 将元素插入到列表.
-     * @param $parentId
      * @param $score
      * @param $value
+     * @param mixed $parentId
      * @return int
      */
     public function add($parentId, ...$arguments)
@@ -154,9 +156,9 @@ abstract class ZSetCollection
     }
 
     /**
-     * @param $parentId
-     * @param $score
-     * @param $value
+     * @param mixed $parentId
+     * @param mixed $score
+     * @param mixed $value
      * @return float
      */
     public function incr($parentId, $score, $value)
@@ -190,8 +192,8 @@ abstract class ZSetCollection
 
     /**
      * 将此元素从列表中移除.
-     * @param $parentId
-     * @param $value
+     * @param mixed $parentId
+     * @param mixed $value
      * @return int
      */
     public function rem($parentId, $value)
@@ -203,9 +205,9 @@ abstract class ZSetCollection
 
     /**
      * 分页查询.
-     * @param $parentId
      * @param mixed $offset
      * @param mixed $limit
+     * @param mixed $parentId
      * @return ['$count',['$id'=>'$score']]
      */
     public function pagination($parentId, $offset = 0, $limit = 10)
@@ -238,7 +240,7 @@ abstract class ZSetCollection
 
     /**
      * 返回有序集合总数.
-     * @param $parentId
+     * @param mixed $parentId
      */
     public function count($parentId)
     {
@@ -267,9 +269,9 @@ abstract class ZSetCollection
     /**
      * 批量获取 成员的分数.
      * @deprecated
-     * @param $parentId
-     * @throws Exceptions\CollectionException
+     * @param mixed $parentId
      * @return array
+     * @throws Exceptions\CollectionException
      */
     public function zscores($parentId, array $members)
     {
@@ -281,9 +283,9 @@ abstract class ZSetCollection
 
     /**
      * 批量获取 成员的分数.
-     * @param int|string|\Stringable $parentId
-     * @throws Exceptions\CollectionException
+     * @param int|string|Stringable $parentId
      * @return array
+     * @throws Exceptions\CollectionException
      */
     public function multipleZScore($parentId, array $members, bool $initialize = true)
     {
@@ -311,8 +313,8 @@ LUA;
 
     /**
      * 格式化成员函数的分值的结果，不存在的成员不返回.
-     * @param $inputs
-     * @param $result
+     * @param mixed $inputs
+     * @param mixed $result
      * @return array
      */
     protected function parseResponse($inputs, $result)
