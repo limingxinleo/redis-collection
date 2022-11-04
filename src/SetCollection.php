@@ -85,6 +85,13 @@ abstract class SetCollection
         return $this->redis()->exists($key);
     }
 
+    public function initWhenNotExists($parentId): void
+    {
+        if (! $this->exist($parentId)) {
+            $this->initialize($parentId);
+        }
+    }
+
     /**
      * 删除缓存.
      * @param mixed $parentId

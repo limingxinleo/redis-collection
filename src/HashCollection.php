@@ -86,6 +86,13 @@ abstract class HashCollection
         return $this->redis()->exists($key);
     }
 
+    public function initWhenNotExists($parentId): void
+    {
+        if (! $this->exist($parentId)) {
+            $this->initialize($parentId);
+        }
+    }
+
     /**
      * 查询所有数据.
      * @param mixed $parentId

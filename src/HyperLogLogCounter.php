@@ -116,6 +116,13 @@ abstract class HyperLogLogCounter
         return (bool) $this->redis()->exists($this->getCacheKey($id));
     }
 
+    public function initWhenNotExists($parentId): void
+    {
+        if (! $this->exist($parentId)) {
+            $this->initialize($parentId);
+        }
+    }
+
     /**
      * 判断当前Counter是否存在.
      * @param mixed $parentId
