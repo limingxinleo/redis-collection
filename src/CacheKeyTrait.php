@@ -22,6 +22,13 @@ trait CacheKeyTrait
         $this->redis()->expire($key, $ttl);
     }
 
+    public function initWhenNotExists($parentId): void
+    {
+        if (! $this->exist($parentId)) {
+            $this->initialize($parentId);
+        }
+    }
+
     protected function getCacheKey($parentId): string
     {
         if (empty($this->prefix)) {
