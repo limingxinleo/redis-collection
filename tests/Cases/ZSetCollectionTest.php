@@ -14,6 +14,7 @@ namespace SwoftTest\Cases;
 use Redis;
 use SwoftTest\Testing\DemoCollection;
 use SwoftTest\Testing\DemoZSetCollection;
+use SwoftTest\Testing\DemoZSetTTLCollection;
 
 /**
  * @internal
@@ -182,5 +183,22 @@ class ZSetCollectionTest extends AbstractTestCase
         $collection->delete($this->pid);
         $res = $collection->multipleZScore($this->pid, [2, 3]);
         $this->assertEquals([2 => '1'], $res);
+    }
+
+    public function testFreshTTL()
+    {
+        $foo = new DemoZSetTTLCollection();
+
+        $foo->incr($this->pid, 1, 'id');
+
+        $res = $foo->redis()->ttl('demo:1');
+
+        $this->assertEquals(10, $res);
+
+        $foo->freshTTL($this->pid, 20);
+
+        $res = $foo->redis()->ttl('demo:1');
+
+        $this->assertEquals(20, $res);
     }
 }
