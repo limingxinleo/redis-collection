@@ -119,7 +119,7 @@ abstract class HashCollection
      */
     public function set($parentId, $hkey, $hvalue)
     {
-        if (! $this->exist($parentId)) {
+        if (! $this->exist && ! $this->exist($parentId)) {
             $this->initialize($parentId);
         }
 
@@ -136,7 +136,7 @@ abstract class HashCollection
      */
     public function incr($parentId, $hkey, $hvalue)
     {
-        if (! $this->exist($parentId)) {
+        if (! $this->exist && ! $this->exist($parentId)) {
             $this->initialize($parentId);
         }
 
@@ -147,15 +147,13 @@ abstract class HashCollection
 
     /**
      * 将多个元素插入到列表.
-     * @param $score
-     * @param $value
      * @param mixed $hashKeys
      * @param mixed $parentId
      * @return int
      */
     public function mset($parentId, $hashKeys)
     {
-        if (! $this->exist($parentId)) {
+        if (! $this->exist && ! $this->exist($parentId)) {
             $this->initialize($parentId);
         }
 
@@ -171,7 +169,7 @@ abstract class HashCollection
      */
     public function mget($parentId, $hashKeys): array
     {
-        if (! $this->exist($parentId)) {
+        if (! $this->exist && ! $this->exist($parentId)) {
             $hash = $this->initialize($parentId);
         } else {
             $hash = $this->redis()->hMGet($this->getCacheKey($parentId), $hashKeys);
@@ -194,7 +192,7 @@ abstract class HashCollection
      */
     public function hget($parentId, $hashKey)
     {
-        if (! $this->exist($parentId)) {
+        if (! $this->exist && ! $this->exist($parentId)) {
             $this->initialize($parentId);
         }
 
@@ -219,7 +217,6 @@ abstract class HashCollection
 
     /**
      * 删除hash.
-     * @param $value
      * @param mixed $parentId
      * @return int
      */
@@ -237,7 +234,7 @@ abstract class HashCollection
      */
     public function ttl($parentId)
     {
-        if (! $this->exist($parentId)) {
+        if (! $this->exist && ! $this->exist($parentId)) {
             $this->initialize($parentId);
         }
 

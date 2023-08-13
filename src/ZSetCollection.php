@@ -146,8 +146,6 @@ abstract class ZSetCollection
 
     /**
      * 将元素插入到列表.
-     * @param $score
-     * @param $value
      * @param mixed $parentId
      * @return int
      */
