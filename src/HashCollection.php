@@ -18,7 +18,7 @@ abstract class HashCollection
 {
     use CacheKeyTrait;
 
-    public const DEFAULT_KEY = 'swoft:none';
+    public const DEFAULT_KEY = 'none';
 
     public const DEFAULT_VALUE = 'none';
 
